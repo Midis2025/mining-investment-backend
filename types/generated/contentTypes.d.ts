@@ -821,6 +821,49 @@ export interface ApiSpeakerSpeaker extends Struct.CollectionTypeSchema {
   };
 }
 
+export interface ApiStudentSponsorshipStudentSponsorship
+  extends Struct.CollectionTypeSchema {
+  collectionName: 'student_sponsorships';
+  info: {
+    displayName: 'studentSponsorship';
+    pluralName: 'student-sponsorships';
+    singularName: 'student-sponsorship';
+  };
+  options: {
+    draftAndPublish: true;
+  };
+  attributes: {
+    createdAt: Schema.Attribute.DateTime;
+    createdBy: Schema.Attribute.Relation<'oneToOne', 'admin::user'> &
+      Schema.Attribute.Private;
+    email: Schema.Attribute.Email;
+    firstName: Schema.Attribute.String;
+    lastName: Schema.Attribute.String;
+    letterOfInterest: Schema.Attribute.Text;
+    locale: Schema.Attribute.String & Schema.Attribute.Private;
+    localizations: Schema.Attribute.Relation<
+      'oneToMany',
+      'api::student-sponsorship.student-sponsorship'
+    > &
+      Schema.Attribute.Private;
+    newsletterOptIn: Schema.Attribute.Boolean;
+    phone: Schema.Attribute.String;
+    preferredLanguage: Schema.Attribute.Enumeration<
+      ['English', 'Francias', 'Bilingual']
+    >;
+    programYearOfStudy: Schema.Attribute.String;
+    publishedAt: Schema.Attribute.DateTime;
+    resumeCv: Schema.Attribute.Media<'images' | 'files' | 'videos' | 'audios'>;
+    schoolInstitution: Schema.Attribute.String;
+    transcript: Schema.Attribute.Media<
+      'images' | 'files' | 'videos' | 'audios'
+    >;
+    updatedAt: Schema.Attribute.DateTime;
+    updatedBy: Schema.Attribute.Relation<'oneToOne', 'admin::user'> &
+      Schema.Attribute.Private;
+  };
+}
+
 export interface ApiSubscriberSubscriber extends Struct.CollectionTypeSchema {
   collectionName: 'subscribers';
   info: {
@@ -1370,6 +1413,7 @@ declare module '@strapi/strapi' {
       'api::participating-company.participating-company': ApiParticipatingCompanyParticipatingCompany;
       'api::press-release.press-release': ApiPressReleasePressRelease;
       'api::speaker.speaker': ApiSpeakerSpeaker;
+      'api::student-sponsorship.student-sponsorship': ApiStudentSponsorshipStudentSponsorship;
       'api::subscriber.subscriber': ApiSubscriberSubscriber;
       'plugin::content-releases.release': PluginContentReleasesRelease;
       'plugin::content-releases.release-action': PluginContentReleasesReleaseAction;

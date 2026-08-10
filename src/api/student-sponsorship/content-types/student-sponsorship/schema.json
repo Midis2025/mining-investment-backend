@@ -1,0 +1,67 @@
+{
+  "kind": "collectionType",
+  "collectionName": "student_sponsorships",
+  "info": {
+    "singularName": "student-sponsorship",
+    "pluralName": "student-sponsorships",
+    "displayName": "studentSponsorship"
+  },
+  "options": {
+    "draftAndPublish": true
+  },
+  "pluginOptions": {},
+  "attributes": {
+    "firstName": {
+      "type": "string"
+    },
+    "lastName": {
+      "type": "string"
+    },
+    "email": {
+      "type": "email"
+    },
+    "phone": {
+      "type": "string"
+    },
+    "schoolInstitution": {
+      "type": "string"
+    },
+    "programYearOfStudy": {
+      "type": "string"
+    },
+    "preferredLanguage": {
+      "type": "enumeration",
+      "enum": [
+        "English",
+        "Francias",
+        "Bilingual"
+      ]
+    },
+    "resumeCv": {
+      "type": "media",
+      "multiple": false,
+      "allowedTypes": [
+        "images",
+        "files",
+        "videos",
+        "audios"
+      ]
+    },
+    "letterOfInterest": {
+      "type": "text"
+    },
+    "transcript": {
+      "type": "media",
+      "multiple": false,
+      "allowedTypes": [
+        "images",
+        "files",
+        "videos",
+        "audios"
+      ]
+    },
+    "newsletterOptIn": {
+      "type": "boolean"
+    }
+  }
+}
