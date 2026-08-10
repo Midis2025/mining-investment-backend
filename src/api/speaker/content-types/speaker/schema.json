@@ -1,0 +1,57 @@
+{
+  "kind": "collectionType",
+  "collectionName": "speakers",
+  "info": {
+    "singularName": "speaker",
+    "pluralName": "speakers",
+    "displayName": "speaker"
+  },
+  "options": {
+    "draftAndPublish": true
+  },
+  "pluginOptions": {},
+  "attributes": {
+    "name": {
+      "type": "string"
+    },
+    "jobTitle": {
+      "type": "string"
+    },
+    "Year": {
+      "type": "enumeration",
+      "enum": [
+        "Year 2027",
+        "Year 2028",
+        "Year 2029",
+        "Year 2030",
+        "Year 2031",
+        "Year 2032"
+      ]
+    },
+    "organization": {
+      "type": "string"
+    },
+    "profileImage": {
+      "type": "media",
+      "multiple": false,
+      "allowedTypes": [
+        "images",
+        "files",
+        "videos",
+        "audios"
+      ]
+    },
+    "bio": {
+      "type": "richtext"
+    },
+    "linkedinUrl": {
+      "type": "string"
+    },
+    "isFeatured": {
+      "type": "boolean"
+    },
+    "displayOrder": {
+      "type": "integer"
+    }
+  }
+}

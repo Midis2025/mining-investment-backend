@@ -1,0 +1,65 @@
+{
+  "kind": "collectionType",
+  "collectionName": "media_partners",
+  "info": {
+    "singularName": "media-partner",
+    "pluralName": "media-partners",
+    "displayName": "media-partner"
+  },
+  "options": {
+    "draftAndPublish": true
+  },
+  "pluginOptions": {},
+  "attributes": {
+    "name": {
+      "type": "string"
+    },
+    "logo": {
+      "type": "media",
+      "multiple": false,
+      "allowedTypes": [
+        "images",
+        "files",
+        "videos",
+        "audios"
+      ]
+    },
+    "website": {
+      "type": "string"
+    },
+    "tier": {
+      "type": "enumeration",
+      "enum": [
+        "ALL MEDIA & PARTNERS",
+        "PLATINUM MEDIA & PARTNERS",
+        "GOLD MEDIA & PARTNERS",
+        "SILVER MEDIA & PARTNERS",
+        "COPPER MEDIA & PARTNERS",
+        "BRONZE SPONSORS"
+      ]
+    },
+    "Type": {
+      "type": "enumeration",
+      "enum": [
+        "Platinum",
+        "Gold",
+        "Silver",
+        "Copper",
+        "Bronze"
+      ]
+    },
+    "Year": {
+      "type": "enumeration",
+      "enum": [
+        "Media & Partners 2027",
+        "Media & Partners 2028",
+        "Media & Partners 2029",
+        "Media & Partners 2030",
+        "Media & Partners 2031"
+      ]
+    },
+    "displayOrder": {
+      "type": "integer"
+    }
+  }
+}

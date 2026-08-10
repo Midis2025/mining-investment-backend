@@ -1,0 +1,62 @@
+{
+  "kind": "collectionType",
+  "collectionName": "investor_registerations",
+  "info": {
+    "singularName": "investor-registeration",
+    "pluralName": "investor-registerations",
+    "displayName": "investorRegisteration"
+  },
+  "options": {
+    "draftAndPublish": true
+  },
+  "pluginOptions": {},
+  "attributes": {
+    "companyName": {
+      "type": "string"
+    },
+    "firstName": {
+      "type": "string"
+    },
+    "lastName": {
+      "type": "string"
+    },
+    "businessTitle": {
+      "type": "string"
+    },
+    "City": {
+      "type": "string"
+    },
+    "Country": {
+      "type": "string"
+    },
+    "Email": {
+      "type": "email"
+    },
+    "Phone": {
+      "type": "string"
+    },
+    "assetsUnderManagement": {
+      "type": "enumeration",
+      "enum": [
+        "Under $10 Million",
+        "From $10 Million - $50 Million",
+        "From $50 Million - $250 Million",
+        "From $250 Million - $1 Billion",
+        "Over $1 Billion",
+        "HNWI / Personal Accredited Investor"
+      ]
+    },
+    "investorType": {
+      "type": "enumeration",
+      "enum": [
+        "Institutional Investor",
+        "Family Office",
+        "High Net Worth Individual (HNWI)",
+        "Fund / Portfolio Manager",
+        "Sovereign Wealth Fund",
+        "Mining Analyst / Investment Banker",
+        "Retail / Accredited Investor"
+      ]
+    }
+  }
+}

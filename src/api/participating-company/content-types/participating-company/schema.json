@@ -1,0 +1,51 @@
+{
+  "kind": "collectionType",
+  "collectionName": "participating_companies",
+  "info": {
+    "singularName": "participating-company",
+    "pluralName": "participating-companies",
+    "displayName": "participating-company"
+  },
+  "options": {
+    "draftAndPublish": true
+  },
+  "pluginOptions": {},
+  "attributes": {
+    "companyName": {
+      "type": "string"
+    },
+    "ticker": {
+      "type": "string"
+    },
+    "type": {
+      "type": "string"
+    },
+    "location": {
+      "type": "string"
+    },
+    "commodities": {
+      "type": "json"
+    },
+    "industry": {
+      "type": "string"
+    },
+    "website": {
+      "type": "string"
+    },
+    "logo": {
+      "type": "media",
+      "multiple": false,
+      "allowedTypes": [
+        "images",
+        "files",
+        "videos",
+        "audios"
+      ]
+    },
+    "event_edition": {
+      "type": "relation",
+      "relation": "oneToOne",
+      "target": "api::event-edition.event-edition"
+    }
+  }
+}

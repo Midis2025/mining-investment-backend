@@ -1,0 +1,46 @@
+{
+  "kind": "collectionType",
+  "collectionName": "company_registerations",
+  "info": {
+    "singularName": "company-registeration",
+    "pluralName": "company-registerations",
+    "displayName": "companyRegisteration"
+  },
+  "options": {
+    "draftAndPublish": true
+  },
+  "pluginOptions": {},
+  "attributes": {
+    "companyName": {
+      "type": "string"
+    },
+    "marketCap": {
+      "type": "string"
+    },
+    "primaryExchangeTicker": {
+      "type": "string"
+    },
+    "commodity": {
+      "type": "string"
+    },
+    "location": {
+      "type": "string"
+    },
+    "email": {
+      "type": "email"
+    },
+    "newsletterOptIn": {
+      "type": "boolean"
+    },
+    "projectStage": {
+      "type": "enumeration",
+      "enum": [
+        "Explorer",
+        "Developer",
+        "Producer",
+        "Royalty",
+        "Project Generator"
+      ]
+    }
+  }
+}

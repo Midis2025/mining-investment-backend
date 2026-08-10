@@ -1,0 +1,27 @@
+{
+  "kind": "collectionType",
+  "collectionName": "event_editions",
+  "info": {
+    "singularName": "event-edition",
+    "pluralName": "event-editions",
+    "displayName": "Event Edition"
+  },
+  "options": {
+    "draftAndPublish": true
+  },
+  "pluginOptions": {},
+  "attributes": {
+    "name": {
+      "type": "string"
+    },
+    "year": {
+      "type": "enumeration",
+      "enum": [
+        "Year 2027",
+        "Year 2028",
+        "Year 2029",
+        "Year 2030"
+      ]
+    }
+  }
+}

@@ -1,0 +1,51 @@
+{
+  "kind": "collectionType",
+  "collectionName": "brochures",
+  "info": {
+    "singularName": "brochure",
+    "pluralName": "brochures",
+    "displayName": "brochure"
+  },
+  "options": {
+    "draftAndPublish": true
+  },
+  "pluginOptions": {},
+  "attributes": {
+    "title": {
+      "type": "string"
+    },
+    "year": {
+      "type": "enumeration",
+      "enum": [
+        "Edition 2027 ",
+        "Edition 2028",
+        "Edition 2029 ",
+        "Edition 2030 ",
+        "Edition 2031 ",
+        "Edition 2032"
+      ]
+    },
+    "eventDate": {
+      "type": "date"
+    },
+    "venue": {
+      "type": "string"
+    },
+    "city": {
+      "type": "string"
+    },
+    "country": {
+      "type": "string"
+    },
+    "pdfFile": {
+      "type": "media",
+      "multiple": false,
+      "allowedTypes": [
+        "images",
+        "files",
+        "videos",
+        "audios"
+      ]
+    }
+  }
+}
