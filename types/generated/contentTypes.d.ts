@@ -523,34 +523,66 @@ export interface ApiCompanyRegisterationCompanyRegisteration
   extends Struct.CollectionTypeSchema {
   collectionName: 'company_registerations';
   info: {
-    displayName: 'companyRegisteration';
-    pluralName: 'company-registerations';
+    displayName: 'Company Registration';
+    pluralName: 'company-registrations';
     singularName: 'company-registeration';
   };
   options: {
-    draftAndPublish: true;
+    draftAndPublish: false;
   };
   attributes: {
-    commodity: Schema.Attribute.String;
-    companyName: Schema.Attribute.String;
+    commodity: Schema.Attribute.String &
+      Schema.Attribute.SetMinMaxLength<{
+        maxLength: 200;
+      }>;
+    companyName: Schema.Attribute.String &
+      Schema.Attribute.Required &
+      Schema.Attribute.SetMinMaxLength<{
+        maxLength: 200;
+      }>;
     createdAt: Schema.Attribute.DateTime;
     createdBy: Schema.Attribute.Relation<'oneToOne', 'admin::user'> &
       Schema.Attribute.Private;
-    email: Schema.Attribute.Email;
+    email: Schema.Attribute.Email &
+      Schema.Attribute.Required &
+      Schema.Attribute.SetMinMaxLength<{
+        maxLength: 254;
+      }>;
+    emailError: Schema.Attribute.Text &
+      Schema.Attribute.SetMinMaxLength<{
+        maxLength: 1000;
+      }>;
+    emailSentAt: Schema.Attribute.DateTime;
+    emailStatus: Schema.Attribute.Enumeration<['pending', 'sent', 'failed']> &
+      Schema.Attribute.DefaultTo<'pending'>;
     locale: Schema.Attribute.String & Schema.Attribute.Private;
     localizations: Schema.Attribute.Relation<
       'oneToMany',
       'api::company-registeration.company-registeration'
     > &
       Schema.Attribute.Private;
-    location: Schema.Attribute.String;
-    marketCap: Schema.Attribute.String;
-    newsletterOptIn: Schema.Attribute.Boolean;
-    primaryExchangeTicker: Schema.Attribute.String;
+    location: Schema.Attribute.String &
+      Schema.Attribute.SetMinMaxLength<{
+        maxLength: 200;
+      }>;
+    marketCap: Schema.Attribute.String &
+      Schema.Attribute.SetMinMaxLength<{
+        maxLength: 100;
+      }>;
+    newsletterOptIn: Schema.Attribute.Boolean &
+      Schema.Attribute.DefaultTo<false>;
+    primaryExchangeTicker: Schema.Attribute.String &
+      Schema.Attribute.SetMinMaxLength<{
+        maxLength: 100;
+      }>;
     projectStage: Schema.Attribute.Enumeration<
       ['Explorer', 'Developer', 'Producer', 'Royalty', 'Project Generator']
     >;
     publishedAt: Schema.Attribute.DateTime;
+    tellUsAboutYourself: Schema.Attribute.Text &
+      Schema.Attribute.SetMinMaxLength<{
+        maxLength: 5000;
+      }>;
     updatedAt: Schema.Attribute.DateTime;
     updatedBy: Schema.Attribute.Relation<'oneToOne', 'admin::user'> &
       Schema.Attribute.Private;
@@ -593,12 +625,12 @@ export interface ApiInvestorRegisterationInvestorRegisteration
   extends Struct.CollectionTypeSchema {
   collectionName: 'investor_registerations';
   info: {
-    displayName: 'investorRegisteration';
-    pluralName: 'investor-registerations';
+    displayName: 'Investor Registration';
+    pluralName: 'investor-registrations';
     singularName: 'investor-registeration';
   };
   options: {
-    draftAndPublish: true;
+    draftAndPublish: false;
   };
   attributes: {
     assetsUnderManagement: Schema.Attribute.Enumeration<
@@ -611,15 +643,43 @@ export interface ApiInvestorRegisterationInvestorRegisteration
         'HNWI / Personal Accredited Investor',
       ]
     >;
-    businessTitle: Schema.Attribute.String;
-    City: Schema.Attribute.String;
-    companyName: Schema.Attribute.String;
-    Country: Schema.Attribute.String;
+    businessTitle: Schema.Attribute.String &
+      Schema.Attribute.SetMinMaxLength<{
+        maxLength: 150;
+      }>;
+    city: Schema.Attribute.String &
+      Schema.Attribute.SetMinMaxLength<{
+        maxLength: 100;
+      }>;
+    companyName: Schema.Attribute.String &
+      Schema.Attribute.Required &
+      Schema.Attribute.SetMinMaxLength<{
+        maxLength: 200;
+      }>;
+    country: Schema.Attribute.String &
+      Schema.Attribute.SetMinMaxLength<{
+        maxLength: 100;
+      }>;
     createdAt: Schema.Attribute.DateTime;
     createdBy: Schema.Attribute.Relation<'oneToOne', 'admin::user'> &
       Schema.Attribute.Private;
-    Email: Schema.Attribute.Email;
-    firstName: Schema.Attribute.String;
+    email: Schema.Attribute.Email &
+      Schema.Attribute.Required &
+      Schema.Attribute.SetMinMaxLength<{
+        maxLength: 254;
+      }>;
+    emailError: Schema.Attribute.Text &
+      Schema.Attribute.SetMinMaxLength<{
+        maxLength: 1000;
+      }>;
+    emailSentAt: Schema.Attribute.DateTime;
+    emailStatus: Schema.Attribute.Enumeration<['pending', 'sent', 'failed']> &
+      Schema.Attribute.DefaultTo<'pending'>;
+    firstName: Schema.Attribute.String &
+      Schema.Attribute.Required &
+      Schema.Attribute.SetMinMaxLength<{
+        maxLength: 100;
+      }>;
     investorType: Schema.Attribute.Enumeration<
       [
         'Institutional Investor',
@@ -631,15 +691,28 @@ export interface ApiInvestorRegisterationInvestorRegisteration
         'Retail / Accredited Investor',
       ]
     >;
-    lastName: Schema.Attribute.String;
+    lastName: Schema.Attribute.String &
+      Schema.Attribute.Required &
+      Schema.Attribute.SetMinMaxLength<{
+        maxLength: 100;
+      }>;
     locale: Schema.Attribute.String & Schema.Attribute.Private;
     localizations: Schema.Attribute.Relation<
       'oneToMany',
       'api::investor-registeration.investor-registeration'
     > &
       Schema.Attribute.Private;
-    Phone: Schema.Attribute.String;
+    newsletterOptIn: Schema.Attribute.Boolean &
+      Schema.Attribute.DefaultTo<false>;
+    phone: Schema.Attribute.String &
+      Schema.Attribute.SetMinMaxLength<{
+        maxLength: 50;
+      }>;
     publishedAt: Schema.Attribute.DateTime;
+    tellUsAboutYourself: Schema.Attribute.Text &
+      Schema.Attribute.SetMinMaxLength<{
+        maxLength: 5000;
+      }>;
     updatedAt: Schema.Attribute.DateTime;
     updatedBy: Schema.Attribute.Relation<'oneToOne', 'admin::user'> &
       Schema.Attribute.Private;
@@ -825,36 +898,68 @@ export interface ApiStudentSponsorshipStudentSponsorship
   extends Struct.CollectionTypeSchema {
   collectionName: 'student_sponsorships';
   info: {
-    displayName: 'studentSponsorship';
+    displayName: 'Student Sponsorship';
     pluralName: 'student-sponsorships';
     singularName: 'student-sponsorship';
   };
   options: {
-    draftAndPublish: true;
+    draftAndPublish: false;
   };
   attributes: {
     createdAt: Schema.Attribute.DateTime;
     createdBy: Schema.Attribute.Relation<'oneToOne', 'admin::user'> &
       Schema.Attribute.Private;
-    email: Schema.Attribute.Email;
-    firstName: Schema.Attribute.String;
-    lastName: Schema.Attribute.String;
-    letterOfInterest: Schema.Attribute.Text;
+    email: Schema.Attribute.Email &
+      Schema.Attribute.Required &
+      Schema.Attribute.SetMinMaxLength<{
+        maxLength: 254;
+      }>;
+    emailError: Schema.Attribute.Text &
+      Schema.Attribute.SetMinMaxLength<{
+        maxLength: 1000;
+      }>;
+    emailSentAt: Schema.Attribute.DateTime;
+    emailStatus: Schema.Attribute.Enumeration<['pending', 'sent', 'failed']> &
+      Schema.Attribute.DefaultTo<'pending'>;
+    firstName: Schema.Attribute.String &
+      Schema.Attribute.Required &
+      Schema.Attribute.SetMinMaxLength<{
+        maxLength: 100;
+      }>;
+    lastName: Schema.Attribute.String &
+      Schema.Attribute.Required &
+      Schema.Attribute.SetMinMaxLength<{
+        maxLength: 100;
+      }>;
+    letterOfInterest: Schema.Attribute.Text &
+      Schema.Attribute.SetMinMaxLength<{
+        maxLength: 10000;
+      }>;
     locale: Schema.Attribute.String & Schema.Attribute.Private;
     localizations: Schema.Attribute.Relation<
       'oneToMany',
       'api::student-sponsorship.student-sponsorship'
     > &
       Schema.Attribute.Private;
-    newsletterOptIn: Schema.Attribute.Boolean;
-    phone: Schema.Attribute.String;
+    newsletterOptIn: Schema.Attribute.Boolean &
+      Schema.Attribute.DefaultTo<false>;
+    phone: Schema.Attribute.String &
+      Schema.Attribute.SetMinMaxLength<{
+        maxLength: 50;
+      }>;
     preferredLanguage: Schema.Attribute.Enumeration<
       ['English', 'Francias', 'Bilingual']
     >;
-    programYearOfStudy: Schema.Attribute.String;
+    programYearOfStudy: Schema.Attribute.String &
+      Schema.Attribute.SetMinMaxLength<{
+        maxLength: 200;
+      }>;
     publishedAt: Schema.Attribute.DateTime;
     resumeCv: Schema.Attribute.Media<'images' | 'files' | 'videos' | 'audios'>;
-    schoolInstitution: Schema.Attribute.String;
+    schoolInstitution: Schema.Attribute.String &
+      Schema.Attribute.SetMinMaxLength<{
+        maxLength: 200;
+      }>;
     transcript: Schema.Attribute.Media<
       'images' | 'files' | 'videos' | 'audios'
     >;

@@ -3,34 +3,39 @@
   "collectionName": "company_registerations",
   "info": {
     "singularName": "company-registeration",
-    "pluralName": "company-registerations",
-    "displayName": "companyRegisteration"
+    "pluralName": "company-registrations",
+    "displayName": "Company Registration"
   },
   "options": {
-    "draftAndPublish": true
+    "draftAndPublish": false
   },
   "pluginOptions": {},
   "attributes": {
     "companyName": {
-      "type": "string"
+      "type": "string",
+      "required": true,
+      "maxLength": 200
     },
     "marketCap": {
-      "type": "string"
+      "type": "string",
+      "maxLength": 100
     },
     "primaryExchangeTicker": {
-      "type": "string"
+      "type": "string",
+      "maxLength": 100
     },
     "commodity": {
-      "type": "string"
+      "type": "string",
+      "maxLength": 200
     },
     "location": {
-      "type": "string"
+      "type": "string",
+      "maxLength": 200
     },
     "email": {
-      "type": "email"
-    },
-    "newsletterOptIn": {
-      "type": "boolean"
+      "type": "email",
+      "required": true,
+      "maxLength": 254
     },
     "projectStage": {
       "type": "enumeration",
@@ -41,6 +46,26 @@
         "Royalty",
         "Project Generator"
       ]
+    },
+    "tellUsAboutYourself": {
+      "type": "text",
+      "maxLength": 5000
+    },
+    "newsletterOptIn": {
+      "type": "boolean",
+      "default": false
+    },
+    "emailStatus": {
+      "type": "enumeration",
+      "enum": ["pending", "sent", "failed"],
+      "default": "pending"
+    },
+    "emailSentAt": {
+      "type": "datetime"
+    },
+    "emailError": {
+      "type": "text",
+      "maxLength": 1000
     }
   }
 }

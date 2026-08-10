@@ -3,37 +3,49 @@
   "collectionName": "investor_registerations",
   "info": {
     "singularName": "investor-registeration",
-    "pluralName": "investor-registerations",
-    "displayName": "investorRegisteration"
+    "pluralName": "investor-registrations",
+    "displayName": "Investor Registration"
   },
   "options": {
-    "draftAndPublish": true
+    "draftAndPublish": false
   },
   "pluginOptions": {},
   "attributes": {
     "companyName": {
-      "type": "string"
+      "type": "string",
+      "required": true,
+      "maxLength": 200
     },
     "firstName": {
-      "type": "string"
+      "type": "string",
+      "required": true,
+      "maxLength": 100
     },
     "lastName": {
-      "type": "string"
+      "type": "string",
+      "required": true,
+      "maxLength": 100
     },
     "businessTitle": {
-      "type": "string"
+      "type": "string",
+      "maxLength": 150
     },
-    "City": {
-      "type": "string"
+    "city": {
+      "type": "string",
+      "maxLength": 100
     },
-    "Country": {
-      "type": "string"
+    "country": {
+      "type": "string",
+      "maxLength": 100
     },
-    "Email": {
-      "type": "email"
+    "email": {
+      "type": "email",
+      "required": true,
+      "maxLength": 254
     },
-    "Phone": {
-      "type": "string"
+    "phone": {
+      "type": "string",
+      "maxLength": 50
     },
     "assetsUnderManagement": {
       "type": "enumeration",
@@ -57,6 +69,26 @@
         "Mining Analyst / Investment Banker",
         "Retail / Accredited Investor"
       ]
+    },
+    "tellUsAboutYourself": {
+      "type": "text",
+      "maxLength": 5000
+    },
+    "newsletterOptIn": {
+      "type": "boolean",
+      "default": false
+    },
+    "emailStatus": {
+      "type": "enumeration",
+      "enum": ["pending", "sent", "failed"],
+      "default": "pending"
+    },
+    "emailSentAt": {
+      "type": "datetime"
+    },
+    "emailError": {
+      "type": "text",
+      "maxLength": 1000
     }
   }
 }

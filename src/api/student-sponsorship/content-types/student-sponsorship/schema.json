@@ -4,30 +4,39 @@
   "info": {
     "singularName": "student-sponsorship",
     "pluralName": "student-sponsorships",
-    "displayName": "studentSponsorship"
+    "displayName": "Student Sponsorship"
   },
   "options": {
-    "draftAndPublish": true
+    "draftAndPublish": false
   },
   "pluginOptions": {},
   "attributes": {
     "firstName": {
-      "type": "string"
+      "type": "string",
+      "required": true,
+      "maxLength": 100
     },
     "lastName": {
-      "type": "string"
+      "type": "string",
+      "required": true,
+      "maxLength": 100
     },
     "email": {
-      "type": "email"
+      "type": "email",
+      "required": true,
+      "maxLength": 254
     },
     "phone": {
-      "type": "string"
+      "type": "string",
+      "maxLength": 50
     },
     "schoolInstitution": {
-      "type": "string"
+      "type": "string",
+      "maxLength": 200
     },
     "programYearOfStudy": {
-      "type": "string"
+      "type": "string",
+      "maxLength": 200
     },
     "preferredLanguage": {
       "type": "enumeration",
@@ -48,7 +57,8 @@
       ]
     },
     "letterOfInterest": {
-      "type": "text"
+      "type": "text",
+      "maxLength": 10000
     },
     "transcript": {
       "type": "media",
@@ -61,7 +71,20 @@
       ]
     },
     "newsletterOptIn": {
-      "type": "boolean"
+      "type": "boolean",
+      "default": false
+    },
+    "emailStatus": {
+      "type": "enumeration",
+      "enum": ["pending", "sent", "failed"],
+      "default": "pending"
+    },
+    "emailSentAt": {
+      "type": "datetime"
+    },
+    "emailError": {
+      "type": "text",
+      "maxLength": 1000
     }
   }
 }
