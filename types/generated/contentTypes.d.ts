@@ -836,7 +836,13 @@ export interface ApiPressReleasePressRelease
       'api::press-release.press-release'
     > &
       Schema.Attribute.Private;
-    longDescription: Schema.Attribute.Text;
+    longDescription: Schema.Attribute.RichText &
+      Schema.Attribute.CustomField<
+        'plugin::ckeditor5.CKEditor',
+        {
+          preset: 'defaultHtml';
+        }
+      >;
     pdfFile: Schema.Attribute.Media<'images' | 'files' | 'videos' | 'audios'>;
     publishedAt: Schema.Attribute.DateTime;
     shortDescription: Schema.Attribute.String;

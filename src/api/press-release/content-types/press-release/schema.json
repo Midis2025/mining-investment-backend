@@ -20,9 +20,6 @@
     "shortDescription": {
       "type": "string"
     },
-    "longDescription": {
-      "type": "text"
-    },
     "isFeatured": {
       "type": "boolean"
     },
@@ -35,6 +32,13 @@
         "videos",
         "audios"
       ]
+    },
+    "longDescription": {
+      "type": "customField",
+      "customField": "plugin::ckeditor5.CKEditor",
+      "options": {
+        "preset": "defaultHtml"
+      }
     }
   }
 }
