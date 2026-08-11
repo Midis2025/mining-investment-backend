@@ -746,7 +746,7 @@ export interface ApiMediaPartnerMediaPartner
     publishedAt: Schema.Attribute.DateTime;
     tier: Schema.Attribute.Enumeration<
       [
-        'ALL MEDIA & PARTNERS',
+        'MEDIA & PARTNERS',
         'PLATINUM MEDIA & PARTNERS',
         'GOLD MEDIA & PARTNERS',
         'SILVER MEDIA & PARTNERS',
@@ -755,7 +755,7 @@ export interface ApiMediaPartnerMediaPartner
       ]
     >;
     Type: Schema.Attribute.Enumeration<
-      ['Platinum', 'Gold', 'Silver', 'Copper', 'Bronze']
+      ['Platinum', 'Gold', 'Silver', 'Copper', 'Bronze', 'MEDIA & PARTNERS']
     >;
     updatedAt: Schema.Attribute.DateTime;
     updatedBy: Schema.Attribute.Relation<'oneToOne', 'admin::user'> &

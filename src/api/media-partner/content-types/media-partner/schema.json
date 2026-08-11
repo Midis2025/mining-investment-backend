@@ -30,7 +30,7 @@
     "tier": {
       "type": "enumeration",
       "enum": [
-        "ALL MEDIA & PARTNERS",
+        "MEDIA & PARTNERS",
         "PLATINUM MEDIA & PARTNERS",
         "GOLD MEDIA & PARTNERS",
         "SILVER MEDIA & PARTNERS",
@@ -45,7 +45,8 @@
         "Gold",
         "Silver",
         "Copper",
-        "Bronze"
+        "Bronze",
+        "MEDIA & PARTNERS"
       ]
     },
     "Year": {
