@@ -24,9 +24,6 @@
         "audios"
       ]
     },
-    "eventDate": {
-      "type": "date"
-    },
     "venue": {
       "type": "string"
     },
@@ -34,6 +31,9 @@
       "type": "string"
     },
     "country": {
+      "type": "string"
+    },
+    "eventDate": {
       "type": "string"
     }
   }

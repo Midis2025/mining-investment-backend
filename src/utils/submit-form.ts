@@ -1,21 +1,17 @@
 /**
  * Shared submission handler for the public website forms.
  *
- * Order of operations matters here: the submission is persisted *before* the
- * notification is attempted, and a failed notification is recorded on the entry
- * rather than propagated to the caller. A submission is never lost because
- * Resend is down or misconfigured.
+ * This validates and stores the submission, and nothing more. The notification
+ * is sent from the content type's `afterCreate` lifecycle (see
+ * ./notify-submission), so website submissions and entries created in Strapi
+ * Admin behave identically — and a submission is never lost because Resend is
+ * down or misconfigured.
  */
 
 import type { Core } from '@strapi/strapi';
 
-import {
-  FORM_DEFINITIONS,
-  getMediaFields,
-  type FormType,
-} from './form-definitions';
+import { FORM_DEFINITIONS, buildReference, getMediaFields, type FormType } from './form-definitions';
 import { unwrapBody, validateSubmission, type FieldError } from './form-validation';
-import { EmailDeliveryError, sendFormSubmissionEmail, type MediaSummary } from './email';
 
 /** Structural subset of the Koa context this handler touches. */
 export interface SubmissionContext {
@@ -60,10 +56,6 @@ function pruneRecentSubmissions(now: number, windowMs: number): void {
   }
 }
 
-function buildReference(prefix: string, id: number, createdAt: Date): string {
-  return `${prefix}-${createdAt.getUTCFullYear()}-${String(id).padStart(5, '0')}`;
-}
-
 function respondWithValidationErrors(ctx: SubmissionContext, errors: FieldError[]): void {
   ctx.status = 400;
   ctx.body = {
@@ -71,41 +63,6 @@ function respondWithValidationErrors(ctx: SubmissionContext, errors: FieldError[
     message: errors[0]?.message ?? 'The submission could not be validated.',
     errors,
   };
-}
-
-/**
- * Turns populated media relations into the name/url pairs the email renders.
- * Never throws — a missing file just omits the row.
- */
-function collectMediaSummaries(
-  entry: Record<string, unknown>,
-  fieldNames: string[]
-): Record<string, MediaSummary | undefined> {
-  const summaries: Record<string, MediaSummary | undefined> = {};
-
-  for (const name of fieldNames) {
-    const value = entry[name];
-    const file = Array.isArray(value) ? value[0] : value;
-    if (file && typeof file === 'object') {
-      const record = file as Record<string, unknown>;
-      const fileName = typeof record.name === 'string' ? record.name : null;
-      if (fileName) {
-        summaries[name] = {
-          name: fileName,
-          url: typeof record.url === 'string' ? absoluteUrl(record.url) : undefined,
-        };
-      }
-    }
-  }
-
-  return summaries;
-}
-
-/** Local uploads are stored as root-relative paths; emails need absolute ones. */
-function absoluteUrl(url: string): string {
-  if (/^https?:\/\//i.test(url)) return url;
-  const base = process.env.PUBLIC_URL?.trim().replace(/\/+$/, '');
-  return base ? `${base}${url}` : url;
 }
 
 export async function submitForm({ strapi, ctx, formType }: SubmitFormInput): Promise<unknown> {
@@ -165,8 +122,8 @@ export async function submitForm({ strapi, ctx, formType }: SubmitFormInput): Pr
 
   const id = Number(entry.id);
   const documentId = String(entry.documentId ?? '');
-  const submittedAt = new Date();
-  const reference = buildReference(definition.referencePrefix, id, submittedAt);
+  const createdAt = entry.createdAt ? new Date(String(entry.createdAt)) : new Date();
+  const reference = buildReference(definition, id, createdAt);
 
   const payload: SuccessPayload = {
     success: true,
@@ -183,58 +140,9 @@ export async function submitForm({ strapi, ctx, formType }: SubmitFormInput): Pr
 
   if (dedupeKey) recentSubmissions.set(dedupeKey, { at: now, payload });
 
-  // --- Notify --------------------------------------------------------------
-  // Failures past this point are logged and recorded, never surfaced: the
-  // submission is already safely stored.
-  try {
-    const result = await sendFormSubmissionEmail({
-      formType,
-      formData: data,
-      reference,
-      media: collectMediaSummaries(entry, mediaFieldNames),
-      submittedAt,
-    });
-
-    await updateEmailStatus(strapi, definition.uid, documentId, {
-      emailStatus: 'sent',
-      emailSentAt: submittedAt.toISOString(),
-      emailError: null,
-    });
-
-    strapi.log.info(`[${formType}] notification sent to ${result.to} (${reference})`);
-  } catch (error) {
-    const message =
-      error instanceof EmailDeliveryError
-        ? error.message
-        : error instanceof Error
-          ? error.message
-          : 'Unknown email error.';
-
-    strapi.log.error(`[${formType}] notification failed for ${reference}: ${message}`);
-
-    await updateEmailStatus(strapi, definition.uid, documentId, {
-      emailStatus: 'failed',
-      emailError: message.slice(0, 1000),
-    });
-  }
-
+  // The notification is dispatched by the content type's afterCreate lifecycle,
+  // which has already been triggered by the create above. Nothing to do here.
   ctx.status = 201;
   ctx.body = payload;
   return ctx.body;
-}
-
-/** Best-effort status write; a failure here must not affect the API response. */
-async function updateEmailStatus(
-  strapi: Core.Strapi,
-  uid: string,
-  documentId: string,
-  data: Record<string, unknown>
-): Promise<void> {
-  if (!documentId) return;
-  try {
-    const documents = strapi.documents(uid as Parameters<Core.Strapi['documents']>[0]);
-    await (documents as any).update({ documentId, data });
-  } catch (error) {
-    strapi.log.error(`Failed to record email status on ${uid} ${documentId}`, error);
-  }
 }

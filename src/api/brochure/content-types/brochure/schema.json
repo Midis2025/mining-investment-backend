@@ -25,9 +25,6 @@
         "Edition 2032"
       ]
     },
-    "eventDate": {
-      "type": "date"
-    },
     "venue": {
       "type": "string"
     },
@@ -46,6 +43,9 @@
         "videos",
         "audios"
       ]
+    },
+    "eventDate": {
+      "type": "string"
     }
   }
 }

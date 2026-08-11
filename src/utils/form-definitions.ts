@@ -257,3 +257,30 @@ export const FORM_DEFINITIONS: Readonly<Record<FormType, FormDefinition>> = {
 export function getMediaFields(definition: FormDefinition): FieldDefinition[] {
   return definition.fields.filter((field) => field.kind === 'media');
 }
+
+/**
+ * Human readable reference for a submission, e.g. "INV-2026-00001". Derived
+ * from stored values only, so the API response and the notification email
+ * always agree.
+ */
+export function buildReference(
+  definition: FormDefinition,
+  id: number,
+  createdAt: Date
+): string {
+  return `${definition.referencePrefix}-${createdAt.getUTCFullYear()}-${String(id).padStart(5, '0')}`;
+}
+
+/** Extracts just the declared form fields from a stored entry. */
+export function pickFormData(
+  definition: FormDefinition,
+  entry: Record<string, unknown>
+): Record<string, unknown> {
+  const data: Record<string, unknown> = {};
+  for (const field of definition.fields) {
+    if (entry[field.name] !== undefined && entry[field.name] !== null) {
+      data[field.name] = entry[field.name];
+    }
+  }
+  return data;
+}
