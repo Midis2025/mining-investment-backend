@@ -7,15 +7,44 @@
     "displayName": "subscriber"
   },
   "options": {
-    "draftAndPublish": true
+    "draftAndPublish": false
   },
   "pluginOptions": {},
   "attributes": {
+    "email": {
+      "type": "email",
+      "required": true
+    },
+    "firstName": {
+      "type": "string"
+    },
+    "lastName": {
+      "type": "string"
+    },
     "fullName": {
       "type": "string"
     },
-    "email": {
-      "type": "email"
+    "status": {
+      "type": "enumeration",
+      "enum": [
+        "Pending",
+        "Subscribed",
+        "Unsubscribed",
+        "Failed"
+      ],
+      "default": "Subscribed"
+    },
+    "mailchimpStatus": {
+      "type": "string"
+    },
+    "mailchimpMemberId": {
+      "type": "string"
+    },
+    "mailchimpError": {
+      "type": "text"
+    },
+    "subscribedAt": {
+      "type": "datetime"
     }
   }
 }

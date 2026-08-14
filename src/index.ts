@@ -2,6 +2,7 @@ import type { Core } from '@strapi/strapi';
 
 import { FORM_DEFINITIONS, type FormType } from './utils/form-definitions';
 import { getMissingEmailConfig } from './utils/email';
+import { getMissingMailchimpConfig } from './utils/mailchimp';
 
 /**
  * Submissions are created through routes marked `auth: false`, so the Public
@@ -55,6 +56,16 @@ function warnAboutEmailConfig(strapi: Core.Strapi): void {
   }
 }
 
+function warnAboutMailchimpConfig(strapi: Core.Strapi): void {
+  const missing = getMissingMailchimpConfig();
+  if (missing.length > 0) {
+    strapi.log.warn(
+      `Mailchimp newsletter integration missing env: ${missing.join(', ')}. ` +
+        'Submissions will be saved in Strapi and flagged mailchimpStatus="failed" until configured.'
+    );
+  }
+}
+
 export default {
   /**
    * An asynchronous register function that runs before
@@ -74,5 +85,7 @@ export default {
   async bootstrap({ strapi }: { strapi: Core.Strapi }) {
     await lockDownFormPermissions(strapi);
     warnAboutEmailConfig(strapi);
+    warnAboutMailchimpConfig(strapi);
   },
 };
+

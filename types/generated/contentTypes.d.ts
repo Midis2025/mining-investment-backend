@@ -1065,21 +1065,31 @@ export interface ApiSubscriberSubscriber extends Struct.CollectionTypeSchema {
     singularName: 'subscriber';
   };
   options: {
-    draftAndPublish: true;
+    draftAndPublish: false;
   };
   attributes: {
     createdAt: Schema.Attribute.DateTime;
     createdBy: Schema.Attribute.Relation<'oneToOne', 'admin::user'> &
       Schema.Attribute.Private;
-    email: Schema.Attribute.Email;
+    email: Schema.Attribute.Email & Schema.Attribute.Required;
+    firstName: Schema.Attribute.String;
     fullName: Schema.Attribute.String;
+    lastName: Schema.Attribute.String;
     locale: Schema.Attribute.String & Schema.Attribute.Private;
     localizations: Schema.Attribute.Relation<
       'oneToMany',
       'api::subscriber.subscriber'
     > &
       Schema.Attribute.Private;
+    mailchimpError: Schema.Attribute.Text;
+    mailchimpMemberId: Schema.Attribute.String;
+    mailchimpStatus: Schema.Attribute.String;
     publishedAt: Schema.Attribute.DateTime;
+    status: Schema.Attribute.Enumeration<
+      ['Pending', 'Subscribed', 'Unsubscribed', 'Failed']
+    > &
+      Schema.Attribute.DefaultTo<'Subscribed'>;
+    subscribedAt: Schema.Attribute.DateTime;
     updatedAt: Schema.Attribute.DateTime;
     updatedBy: Schema.Attribute.Relation<'oneToOne', 'admin::user'> &
       Schema.Attribute.Private;
