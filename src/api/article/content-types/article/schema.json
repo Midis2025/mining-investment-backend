@@ -36,6 +36,14 @@
     },
     "date": {
       "type": "date"
+    },
+    "publishTo": {
+      "type": "enumeration",
+      "enum": [
+        "Mining Investment Week",
+        "International Mining Week",
+        "Noble Mining Conference"
+      ]
     }
   }
 }

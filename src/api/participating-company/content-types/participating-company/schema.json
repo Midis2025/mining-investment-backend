@@ -46,6 +46,14 @@
       "type": "relation",
       "relation": "oneToOne",
       "target": "api::event-edition.event-edition"
+    },
+    "publishTo": {
+      "type": "enumeration",
+      "enum": [
+        "Mining Investment Week",
+        "International Mining Week",
+        "Noble Mining Conference"
+      ]
     }
   }
 }

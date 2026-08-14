@@ -468,6 +468,13 @@ export interface ApiAgendaAgenda extends Struct.CollectionTypeSchema {
       Schema.Attribute.Private;
     pdfFile: Schema.Attribute.Media<'images' | 'files' | 'videos' | 'audios'>;
     publishedAt: Schema.Attribute.DateTime;
+    publishTo: Schema.Attribute.Enumeration<
+      [
+        'Mining Investment Week',
+        'International Mining Week',
+        'Noble Mining Conference',
+      ]
+    >;
     title: Schema.Attribute.String;
     updatedAt: Schema.Attribute.DateTime;
     updatedBy: Schema.Attribute.Relation<'oneToOne', 'admin::user'> &
@@ -502,6 +509,13 @@ export interface ApiArticleArticle extends Struct.CollectionTypeSchema {
       Schema.Attribute.Private;
     pdfFile: Schema.Attribute.Media<'images' | 'files' | 'videos' | 'audios'>;
     publishedAt: Schema.Attribute.DateTime;
+    publishTo: Schema.Attribute.Enumeration<
+      [
+        'Mining Investment Week',
+        'International Mining Week',
+        'Noble Mining Conference',
+      ]
+    >;
     title: Schema.Attribute.String;
     updatedAt: Schema.Attribute.DateTime;
     updatedBy: Schema.Attribute.Relation<'oneToOne', 'admin::user'> &
@@ -534,6 +548,13 @@ export interface ApiBrochureBrochure extends Struct.CollectionTypeSchema {
       Schema.Attribute.Private;
     pdfFile: Schema.Attribute.Media<'images' | 'files' | 'videos' | 'audios'>;
     publishedAt: Schema.Attribute.DateTime;
+    publishTo: Schema.Attribute.Enumeration<
+      [
+        'Mining Investment Week',
+        'International Mining Week',
+        'Noble Mining Conference',
+      ]
+    >;
     title: Schema.Attribute.String;
     updatedAt: Schema.Attribute.DateTime;
     updatedBy: Schema.Attribute.Relation<'oneToOne', 'admin::user'> &
@@ -777,6 +798,13 @@ export interface ApiMediaPartnerMediaPartner
     logo: Schema.Attribute.Media<'images' | 'files' | 'videos' | 'audios'>;
     name: Schema.Attribute.String;
     publishedAt: Schema.Attribute.DateTime;
+    publishTo: Schema.Attribute.Enumeration<
+      [
+        'Mining Investment Week',
+        'International Mining Week',
+        'Noble Mining Conference',
+      ]
+    >;
     tier: Schema.Attribute.Enumeration<
       [
         'MEDIA & PARTNERS',
@@ -837,6 +865,13 @@ export interface ApiParticipatingCompanyParticipatingCompany
     location: Schema.Attribute.String;
     logo: Schema.Attribute.Media<'images' | 'files' | 'videos' | 'audios'>;
     publishedAt: Schema.Attribute.DateTime;
+    publishTo: Schema.Attribute.Enumeration<
+      [
+        'Mining Investment Week',
+        'International Mining Week',
+        'Noble Mining Conference',
+      ]
+    >;
     ticker: Schema.Attribute.String;
     type: Schema.Attribute.String;
     updatedAt: Schema.Attribute.DateTime;
@@ -878,6 +913,13 @@ export interface ApiPressReleasePressRelease
       >;
     pdfFile: Schema.Attribute.Media<'images' | 'files' | 'videos' | 'audios'>;
     publishedAt: Schema.Attribute.DateTime;
+    publishTo: Schema.Attribute.Enumeration<
+      [
+        'Mining Investment Week',
+        'International Mining Week',
+        'Noble Mining Conference',
+      ]
+    >;
     shortDescription: Schema.Attribute.String;
     title: Schema.Attribute.String;
     updatedAt: Schema.Attribute.DateTime;
@@ -917,6 +959,13 @@ export interface ApiSpeakerSpeaker extends Struct.CollectionTypeSchema {
       'images' | 'files' | 'videos' | 'audios'
     >;
     publishedAt: Schema.Attribute.DateTime;
+    publishTo: Schema.Attribute.Enumeration<
+      [
+        'Mining Investment Week',
+        'International Mining Week',
+        'Noble Mining Conference',
+      ]
+    >;
     updatedAt: Schema.Attribute.DateTime;
     updatedBy: Schema.Attribute.Relation<'oneToOne', 'admin::user'> &
       Schema.Attribute.Private;
