@@ -470,7 +470,7 @@ export interface ApiAgendaAgenda extends Struct.CollectionTypeSchema {
     publishedAt: Schema.Attribute.DateTime;
     publishTo: Schema.Attribute.Enumeration<
       [
-        'Mining Investment Week',
+        'Mining Investment Event',
         'International Mining Week',
         'Noble Mining Conference',
       ]
@@ -511,7 +511,7 @@ export interface ApiArticleArticle extends Struct.CollectionTypeSchema {
     publishedAt: Schema.Attribute.DateTime;
     publishTo: Schema.Attribute.Enumeration<
       [
-        'Mining Investment Week',
+        'Mining Investment Event',
         'International Mining Week',
         'Noble Mining Conference',
       ]
@@ -550,7 +550,7 @@ export interface ApiBrochureBrochure extends Struct.CollectionTypeSchema {
     publishedAt: Schema.Attribute.DateTime;
     publishTo: Schema.Attribute.Enumeration<
       [
-        'Mining Investment Week',
+        'Mining Investment Event',
         'International Mining Week',
         'Noble Mining Conference',
       ]
@@ -800,7 +800,7 @@ export interface ApiMediaPartnerMediaPartner
     publishedAt: Schema.Attribute.DateTime;
     publishTo: Schema.Attribute.Enumeration<
       [
-        'Mining Investment Week',
+        'Mining Investment Event',
         'International Mining Week',
         'Noble Mining Conference',
       ]
@@ -867,7 +867,7 @@ export interface ApiParticipatingCompanyParticipatingCompany
     publishedAt: Schema.Attribute.DateTime;
     publishTo: Schema.Attribute.Enumeration<
       [
-        'Mining Investment Week',
+        'Mining Investment Event',
         'International Mining Week',
         'Noble Mining Conference',
       ]
@@ -915,7 +915,7 @@ export interface ApiPressReleasePressRelease
     publishedAt: Schema.Attribute.DateTime;
     publishTo: Schema.Attribute.Enumeration<
       [
-        'Mining Investment Week',
+        'Mining Investment Event',
         'International Mining Week',
         'Noble Mining Conference',
       ]
@@ -961,7 +961,7 @@ export interface ApiSpeakerSpeaker extends Struct.CollectionTypeSchema {
     publishedAt: Schema.Attribute.DateTime;
     publishTo: Schema.Attribute.Enumeration<
       [
-        'Mining Investment Week',
+        'Mining Investment Event',
         'International Mining Week',
         'Noble Mining Conference',
       ]

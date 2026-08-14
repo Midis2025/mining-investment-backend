@@ -43,7 +43,7 @@
     "publishTo": {
       "type": "enumeration",
       "enum": [
-        "Mining Investment Week",
+        "Mining Investment Event",
         "International Mining Week",
         "Noble Mining Conference"
       ]
