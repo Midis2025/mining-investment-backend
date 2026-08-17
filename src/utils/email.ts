@@ -6,6 +6,8 @@
  * can never influence who a submission is sent to.
  */
 
+import fs from 'fs';
+import path from 'path';
 import { Resend } from 'resend';
 
 import {
@@ -147,7 +149,245 @@ function buildRow(
   };
 }
 
-function renderHtml(
+const TEMPLATE_CACHE: Partial<Record<FormType, string>> = {};
+
+function getTemplateRaw(formType: FormType): string | null {
+  if (TEMPLATE_CACHE[formType]) {
+    return TEMPLATE_CACHE[formType]!;
+  }
+
+  const filenameMap: Record<FormType, string> = {
+    studentSponsorship: 'Sudent-Sponsorship-from-template.html',
+    company: 'company-registeration-form.html',
+    investor: 'investor-registeration-form.html',
+  };
+
+  const filename = filenameMap[formType];
+  if (!filename) return null;
+
+  const candidateDirs = [
+    path.resolve(process.cwd(), 'src/mining-investment-forms template'),
+    path.resolve(__dirname, '../../mining-investment-forms template'),
+    path.resolve(__dirname, '../mining-investment-forms template'),
+    path.resolve(__dirname, 'mining-investment-forms template'),
+    path.resolve(process.cwd(), 'dist/src/mining-investment-forms template'),
+  ];
+
+  for (const dir of candidateDirs) {
+    const fullPath = path.join(dir, filename);
+    if (fs.existsSync(fullPath)) {
+      try {
+        const content = fs.readFileSync(fullPath, 'utf8');
+        TEMPLATE_CACHE[formType] = content;
+        return content;
+      } catch (err) {
+        // Fallback to next candidate
+      }
+    }
+  }
+
+  return null;
+}
+
+function renderStudentSponsorshipTemplate(
+  templateHtml: string,
+  formData: Record<string, unknown>,
+  media: Record<string, MediaSummary | undefined>,
+  submittedAt: Date,
+  reference?: string
+): string {
+  const firstName = String(formData.firstName || '').trim();
+  const lastName = String(formData.lastName || '').trim();
+  const fullName = [firstName, lastName].filter(Boolean).join(' ') || 'N/A';
+  const email = String(formData.email || '').trim();
+  const emailHtml = email
+    ? `<a href="mailto:${escapeHtml(email)}" style="color:#A81B32;text-decoration:none;font-weight:500;">${escapeHtml(email)}</a>`
+    : 'N/A';
+  const phone = String(formData.phone || '').trim() || 'N/A';
+  const institution =
+    String(formData.schoolInstitution || formData.school || formData.institution || '').trim() || 'N/A';
+  const programYear =
+    String(formData.programYearOfStudy || formData.program || '').trim() || 'N/A';
+  const language = String(formData.preferredLanguage || '').trim() || 'N/A';
+
+  const resume = media.resumeCv || media.resume || media.cv;
+  const resumeHtml = resume?.url
+    ? `<a href="${escapeHtml(resume.url)}" target="_blank" style="color:#A81B32;text-decoration:underline;font-weight:600;">${escapeHtml(resume.name)} (Download)</a>`
+    : resume?.name
+      ? escapeHtml(resume.name)
+      : '<span style="color:#A0AEC0;">None attached</span>';
+
+  const transcript = media.transcript;
+  const transcriptHtml = transcript?.url
+    ? `<a href="${escapeHtml(transcript.url)}" target="_blank" style="color:#A81B32;text-decoration:underline;font-weight:600;">${escapeHtml(transcript.name)} (Download)</a>`
+    : transcript?.name
+      ? escapeHtml(transcript.name)
+      : '<span style="color:#A0AEC0;">None attached</span>';
+
+  const letter = String(formData.letterOfInterest || '').trim();
+  const letterHtml = letter
+    ? escapeHtml(letter).replace(/\r?\n/g, '<br />')
+    : '<span style="color:#A0AEC0;">None provided</span>';
+
+  let html = templateHtml;
+
+  html = html.replace(/\{\{Student Name\}\}/g, escapeHtml(fullName));
+  html = html.replace(/\{\{Email\}\}/g, emailHtml);
+  html = html.replace(/\{\{Phone Number\}\}/g, escapeHtml(phone));
+  html = html.replace(/\{\{Institution Name\}\}/g, escapeHtml(institution));
+  html = html.replace(/\{\{Program Name\}\}/g, escapeHtml(programYear));
+  html = html.replace(/\{\{Year of Study\}\}/g, escapeHtml(programYear));
+  html = html.replace(/\{\{Preferred Language\}\}/g, escapeHtml(language));
+  html = html.replace(/\{\{Resume File\}\}/g, resumeHtml);
+  html = html.replace(/\{\{Letter of Interest\}\}/g, letterHtml);
+
+  // Additional rows for transcript and newsletter
+  const additionalRows: string[] = [];
+
+  if (transcript?.name || transcript?.url) {
+    additionalRows.push(`
+                <!-- Transcript Attachment -->
+                <tr>
+                  <td width="145" style="width: 145px; background-color: #FFFFFF; border: 1.2px solid #E8A8B2; border-radius: 7px; padding: 10px 14px; font-size: 13px; font-weight: 700; color: #1A202C; vertical-align: middle;">
+                    Transcript
+                  </td>
+                  <td width="7" style="width: 7px; font-size: 1px; line-height: 1px;">&nbsp;</td>
+                  <td style="background-color: #FFFFFF; border: 1.2px solid #E8A8B2; border-radius: 7px; padding: 10px 14px; font-size: 13px; color: #2D3748; vertical-align: middle; word-break: break-word;">
+                    ${transcriptHtml}
+                  </td>
+                </tr>`);
+  }
+
+  if (formData.newsletterOptIn !== undefined) {
+    const optInText = formData.newsletterOptIn ? 'Yes' : 'No';
+    additionalRows.push(`
+                <!-- Newsletter Opt-in -->
+                <tr>
+                  <td width="145" style="width: 145px; background-color: #FFFFFF; border: 1.2px solid #E8A8B2; border-radius: 7px; padding: 10px 14px; font-size: 13px; font-weight: 700; color: #1A202C; vertical-align: middle;">
+                    Updates Opt-in
+                  </td>
+                  <td width="7" style="width: 7px; font-size: 1px; line-height: 1px;">&nbsp;</td>
+                  <td style="background-color: #FFFFFF; border: 1.2px solid #E8A8B2; border-radius: 7px; padding: 10px 14px; font-size: 13px; color: #2D3748; vertical-align: middle; word-break: break-word;">
+                    ${optInText}
+                  </td>
+                </tr>`);
+  }
+
+  html = html.replace(/\{\{Additional Rows\}\}/g, additionalRows.join('\n'));
+
+  // Inject Reference and Submitted date into Status block
+  const statusMeta = `
+              <div style="margin-top: 14px; padding-top: 12px; border-top: 1px dashed #E8A8B2; font-family: 'Inter', Helvetica, Arial, sans-serif; font-size: 12px; color: #718096;">
+                ${reference ? `<div>Submission Reference: <strong style="color: #1E2229;">${escapeHtml(reference)}</strong></div>` : ''}
+                <div style="margin-top: 4px;">Submitted At: <strong style="color: #1E2229;">${escapeHtml(formatDate(submittedAt))}</strong></div>
+              </div>`;
+
+  html = html.replace(/\{\{Status Meta\}\}/g, statusMeta);
+
+  return html;
+}
+
+function renderCompanyTemplate(
+  templateHtml: string,
+  formData: Record<string, unknown>,
+  submittedAt: Date,
+  reference?: string
+): string {
+  const companyName = String(formData.companyName || '').trim() || 'N/A';
+  const email = String(formData.email || '').trim();
+  const emailHtml = email
+    ? `<a href="mailto:${escapeHtml(email)}" style="color:#A81B32;text-decoration:none;font-weight:500;">${escapeHtml(email)}</a>`
+    : 'N/A';
+  const marketCap = String(formData.marketCap || '').trim() || 'N/A';
+  const exchangeTicker = String(formData.primaryExchangeTicker || formData.ticker || '').trim() || 'N/A';
+  const commodity = String(formData.commodity || '').trim() || 'N/A';
+  const projectStage = String(formData.projectStage || '').trim() || 'N/A';
+  const location = String(formData.location || '').trim() || 'N/A';
+  const about = String(formData.tellUsAboutYourself || formData.aboutYou || formData.about || '').trim();
+  const aboutHtml = about
+    ? escapeHtml(about).replace(/\r?\n/g, '<br />')
+    : '<span style="color:#A0AEC0;">None provided</span>';
+  const optInText = formData.newsletterOptIn ? 'Yes' : 'No';
+
+  let html = templateHtml;
+
+  html = html.replace(/\{\{Company Name\}\}/g, escapeHtml(companyName));
+  html = html.replace(/\{\{Email\}\}/g, emailHtml);
+  html = html.replace(/\{\{Market Cap\}\}/g, escapeHtml(marketCap));
+  html = html.replace(/\{\{Primary Exchange\/Ticker\}\}/g, escapeHtml(exchangeTicker));
+  html = html.replace(/\{\{Commodity\}\}/g, escapeHtml(commodity));
+  html = html.replace(/\{\{Project Stage\}\}/g, escapeHtml(projectStage));
+  html = html.replace(/\{\{Location\}\}/g, escapeHtml(location));
+  html = html.replace(/\{\{Tell Us About Yourself\}\}/g, aboutHtml);
+  html = html.replace(/\{\{Sign up for news and updates\}\}/g, optInText);
+
+  // Inject Reference and Submitted date into Status block
+  const statusMeta = `
+              <div style="margin-top: 14px; padding-top: 12px; border-top: 1px dashed #E8A8B2; font-family: 'Inter', Helvetica, Arial, sans-serif; font-size: 12px; color: #718096;">
+                ${reference ? `<div>Registration Reference: <strong style="color: #1E2229;">${escapeHtml(reference)}</strong></div>` : ''}
+                <div style="margin-top: 4px;">Submitted At: <strong style="color: #1E2229;">${escapeHtml(formatDate(submittedAt))}</strong></div>
+              </div>`;
+
+  html = html.replace(/\{\{Status Meta\}\}/g, statusMeta);
+
+  return html;
+}
+
+function renderInvestorTemplate(
+  templateHtml: string,
+  formData: Record<string, unknown>,
+  submittedAt: Date,
+  reference?: string
+): string {
+  const companyName = String(formData.companyName || '').trim() || 'N/A';
+  const firstName = String(formData.firstName || '').trim();
+  const lastName = String(formData.lastName || '').trim();
+  const fullName = [firstName, lastName].filter(Boolean).join(' ') || 'N/A';
+  const businessTitle = String(formData.businessTitle || '').trim() || 'N/A';
+  const email = String(formData.email || '').trim();
+  const emailHtml = email
+    ? `<a href="mailto:${escapeHtml(email)}" style="color:#A81B32;text-decoration:none;font-weight:500;">${escapeHtml(email)}</a>`
+    : 'N/A';
+  const phone = String(formData.phone || '').trim() || 'N/A';
+  const city = String(formData.city || '').trim() || 'N/A';
+  const country = String(formData.country || '').trim() || 'N/A';
+  const aum = String(formData.assetsUnderManagement || formData.aum || '').trim() || 'N/A';
+  const investorType = String(formData.investorType || '').trim() || 'N/A';
+  const about = String(formData.tellUsAboutYourself || formData.aboutYou || formData.about || '').trim();
+  const aboutHtml = about
+    ? escapeHtml(about).replace(/\r?\n/g, '<br />')
+    : '<span style="color:#A0AEC0;">None provided</span>';
+  const optInText = formData.newsletterOptIn ? 'Yes' : 'No';
+
+  let html = templateHtml;
+
+  html = html.replace(/\{\{Company Name\}\}/g, escapeHtml(companyName));
+  html = html.replace(/\{\{First Name\}\}\s*\{\{Last Name\}\}/g, escapeHtml(fullName));
+  html = html.replace(/\{\{First Name\}\}/g, escapeHtml(firstName || 'N/A'));
+  html = html.replace(/\{\{Last Name\}\}/g, escapeHtml(lastName || 'N/A'));
+  html = html.replace(/\{\{Business Title\}\}/g, escapeHtml(businessTitle));
+  html = html.replace(/\{\{Email\}\}/g, emailHtml);
+  html = html.replace(/\{\{Phone\}\}/g, escapeHtml(phone));
+  html = html.replace(/\{\{City\}\}/g, escapeHtml(city));
+  html = html.replace(/\{\{Country\}\}/g, escapeHtml(country));
+  html = html.replace(/\{\{Assets Under Management\}\}/g, escapeHtml(aum));
+  html = html.replace(/\{\{Investor Type\}\}/g, escapeHtml(investorType));
+  html = html.replace(/\{\{Investment Focus \/ Objectives\}\}/g, aboutHtml);
+  html = html.replace(/\{\{Sign up for news and updates\}\}/g, optInText);
+
+  // Inject Reference and Submitted date into Status block
+  const statusMeta = `
+              <div style="margin-top: 14px; padding-top: 12px; border-top: 1px dashed #E8A8B2; font-family: 'Inter', Helvetica, Arial, sans-serif; font-size: 12px; color: #718096;">
+                ${reference ? `<div>Registration Reference: <strong style="color: #1E2229;">${escapeHtml(reference)}</strong></div>` : ''}
+                <div style="margin-top: 4px;">Submitted At: <strong style="color: #1E2229;">${escapeHtml(formatDate(submittedAt))}</strong></div>
+              </div>`;
+
+  html = html.replace(/\{\{Status Meta\}\}/g, statusMeta);
+
+  return html;
+}
+
+function renderGenericHtml(
   definition: FormDefinition,
   rows: DisplayRow[],
   submittedAt: Date,
@@ -222,6 +462,31 @@ function renderHtml(
 </html>`;
 }
 
+function renderHtml(
+  definition: FormDefinition,
+  formType: FormType,
+  formData: Record<string, unknown>,
+  media: Record<string, MediaSummary | undefined>,
+  rows: DisplayRow[],
+  submittedAt: Date,
+  reference?: string
+): string {
+  const rawTemplate = getTemplateRaw(formType);
+  if (rawTemplate) {
+    if (formType === 'studentSponsorship') {
+      return renderStudentSponsorshipTemplate(rawTemplate, formData, media, submittedAt, reference);
+    }
+    if (formType === 'company') {
+      return renderCompanyTemplate(rawTemplate, formData, submittedAt, reference);
+    }
+    if (formType === 'investor') {
+      return renderInvestorTemplate(rawTemplate, formData, submittedAt, reference);
+    }
+  }
+
+  return renderGenericHtml(definition, rows, submittedAt, reference);
+}
+
 function renderText(
   definition: FormDefinition,
   rows: DisplayRow[],
@@ -268,14 +533,25 @@ export async function sendFormSubmissionEmail(
     : undefined;
   const replyTo = isValidEmail(replyToCandidate) ? String(replyToCandidate).trim() : undefined;
 
+  const html = renderHtml(
+    definition,
+    input.formType,
+    input.formData,
+    input.media ?? {},
+    rows,
+    submittedAt,
+    input.reference
+  );
+  const text = renderText(definition, rows, submittedAt, input.reference);
+
   let response: Awaited<ReturnType<Resend['emails']['send']>>;
   try {
     response = await getResendClient(apiKey).emails.send({
       from,
       to: recipient,
       subject: definition.subject,
-      html: renderHtml(definition, rows, submittedAt, input.reference),
-      text: renderText(definition, rows, submittedAt, input.reference),
+      html,
+      text,
       ...(replyTo ? { replyTo } : {}),
     });
   } catch (error) {
