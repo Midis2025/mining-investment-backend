@@ -619,6 +619,16 @@ export interface ApiCompanyRegisterationCompanyRegisteration
       Schema.Attribute.SetMinMaxLength<{
         maxLength: 200;
       }>;
+    mailchimpError: Schema.Attribute.Text &
+      Schema.Attribute.SetMinMaxLength<{
+        maxLength: 1000;
+      }>;
+    mailchimpMemberId: Schema.Attribute.String;
+    mailchimpStatus: Schema.Attribute.Enumeration<
+      ['pending', 'synced', 'failed']
+    > &
+      Schema.Attribute.DefaultTo<'pending'>;
+    mailchimpSyncedAt: Schema.Attribute.DateTime;
     marketCap: Schema.Attribute.String &
       Schema.Attribute.SetMinMaxLength<{
         maxLength: 100;
@@ -756,6 +766,16 @@ export interface ApiInvestorRegisterationInvestorRegisteration
       'api::investor-registeration.investor-registeration'
     > &
       Schema.Attribute.Private;
+    mailchimpError: Schema.Attribute.Text &
+      Schema.Attribute.SetMinMaxLength<{
+        maxLength: 1000;
+      }>;
+    mailchimpMemberId: Schema.Attribute.String;
+    mailchimpStatus: Schema.Attribute.Enumeration<
+      ['pending', 'synced', 'failed']
+    > &
+      Schema.Attribute.DefaultTo<'pending'>;
+    mailchimpSyncedAt: Schema.Attribute.DateTime;
     newsletterOptIn: Schema.Attribute.Boolean &
       Schema.Attribute.DefaultTo<false>;
     phone: Schema.Attribute.String &
@@ -1029,6 +1049,16 @@ export interface ApiStudentSponsorshipStudentSponsorship
       'api::student-sponsorship.student-sponsorship'
     > &
       Schema.Attribute.Private;
+    mailchimpError: Schema.Attribute.Text &
+      Schema.Attribute.SetMinMaxLength<{
+        maxLength: 1000;
+      }>;
+    mailchimpMemberId: Schema.Attribute.String;
+    mailchimpStatus: Schema.Attribute.Enumeration<
+      ['pending', 'synced', 'failed']
+    > &
+      Schema.Attribute.DefaultTo<'pending'>;
+    mailchimpSyncedAt: Schema.Attribute.DateTime;
     newsletterOptIn: Schema.Attribute.Boolean &
       Schema.Attribute.DefaultTo<false>;
     phone: Schema.Attribute.String &

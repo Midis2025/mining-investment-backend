@@ -89,6 +89,21 @@
     "emailError": {
       "type": "text",
       "maxLength": 1000
+    },
+    "mailchimpStatus": {
+      "type": "enumeration",
+      "enum": ["pending", "synced", "failed"],
+      "default": "pending"
+    },
+    "mailchimpMemberId": {
+      "type": "string"
+    },
+    "mailchimpSyncedAt": {
+      "type": "datetime"
+    },
+    "mailchimpError": {
+      "type": "text",
+      "maxLength": 1000
     }
   }
 }

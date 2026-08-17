@@ -1,11 +1,19 @@
 /**
  * Mailchimp Marketing API Service.
  *
- * Handles subscriber synchronization, tagging, and optional Customer Journey triggers.
+ * Handles member synchronization, audience routing, custom merge fields,
+ * tagging, and optional Customer Journey triggers across multiple audiences:
+ * - General Subscriber / Newsletter
+ * - Company Registration
+ * - Investor Registration
+ * - Student Sponsorship
+ *
  * All credentials and audience IDs are resolved server-side from environment variables.
  */
 
 import crypto from 'crypto';
+
+export type MailchimpTarget = 'subscriber' | 'company' | 'investor' | 'student';
 
 export class MailchimpError extends Error {
   readonly status?: number;
@@ -25,6 +33,28 @@ export interface MailchimpConfig {
   apiKey: string;
   serverPrefix: string;
   audienceId: string;
+  journeyId?: string;
+  journeyStepId?: string;
+  defaultTag?: string;
+}
+
+export type MailchimpMemberStatus =
+  | 'subscribed'
+  | 'unsubscribed'
+  | 'pending'
+  | 'transactional'
+  | 'cleaned';
+
+export interface AddOrUpdateMemberInput {
+  email: string;
+  audienceId?: string;
+  target?: MailchimpTarget;
+  firstName?: string;
+  lastName?: string;
+  mergeFields?: Record<string, unknown>;
+  tags?: string[];
+  statusIfNew?: MailchimpMemberStatus;
+  status?: MailchimpMemberStatus;
   journeyId?: string;
   journeyStepId?: string;
   defaultTag?: string;
@@ -54,19 +84,74 @@ export function getSubscriberHash(email: string): string {
 }
 
 /**
- * Resolves Mailchimp configuration from environment variables.
+ * Resolves the Mailchimp Audience ID for a specific target audience.
  */
-export function getMailchimpConfig(): MailchimpConfig {
+export function getAudienceId(target: MailchimpTarget = 'subscriber'): string {
+  switch (target) {
+    case 'subscriber':
+      return (
+        process.env.MAILCHIMP_SUBSCRIBER_AUDIENCE_ID?.trim() ||
+        process.env.MAILCHIMP_AUDIENCE_ID?.trim() ||
+        ''
+      );
+    case 'company':
+      return process.env.MAILCHIMP_COMPANY_AUDIENCE_ID?.trim() || '';
+    case 'investor':
+      return process.env.MAILCHIMP_INVESTOR_AUDIENCE_ID?.trim() || '';
+    case 'student':
+      return process.env.MAILCHIMP_STUDENT_AUDIENCE_ID?.trim() || '';
+    default:
+      return '';
+  }
+}
+
+/**
+ * Resolves global Mailchimp credentials.
+ */
+export function getMailchimpAuth(): { apiKey: string; serverPrefix: string } {
   const apiKey = process.env.MAILCHIMP_API_KEY?.trim() || '';
   let serverPrefix = process.env.MAILCHIMP_SERVER_PREFIX?.trim() || '';
-  const audienceId = process.env.MAILCHIMP_AUDIENCE_ID?.trim() || '';
-  const journeyId = process.env.MAILCHIMP_JOURNEY_ID?.trim() || undefined;
-  const journeyStepId = process.env.MAILCHIMP_JOURNEY_STEP_ID?.trim() || undefined;
-  const defaultTag = process.env.MAILCHIMP_SUBSCRIBER_TAG?.trim() || undefined;
 
   if (!serverPrefix && apiKey.includes('-')) {
     const parts = apiKey.split('-');
     serverPrefix = parts[parts.length - 1];
+  }
+
+  return { apiKey, serverPrefix };
+}
+
+/**
+ * Resolves Mailchimp configuration for a specific target audience from environment variables.
+ */
+export function getMailchimpConfig(target: MailchimpTarget = 'subscriber'): MailchimpConfig {
+  const { apiKey, serverPrefix } = getMailchimpAuth();
+  const audienceId = getAudienceId(target);
+
+  let journeyId: string | undefined;
+  let journeyStepId: string | undefined;
+  let defaultTag: string | undefined;
+
+  switch (target) {
+    case 'subscriber':
+      journeyId = process.env.MAILCHIMP_JOURNEY_ID?.trim() || undefined;
+      journeyStepId = process.env.MAILCHIMP_JOURNEY_STEP_ID?.trim() || undefined;
+      defaultTag = process.env.MAILCHIMP_SUBSCRIBER_TAG?.trim() || undefined;
+      break;
+    case 'company':
+      journeyId = process.env.MAILCHIMP_COMPANY_JOURNEY_ID?.trim() || undefined;
+      journeyStepId = process.env.MAILCHIMP_COMPANY_JOURNEY_STEP_ID?.trim() || undefined;
+      defaultTag = process.env.MAILCHIMP_COMPANY_TAG?.trim() || undefined;
+      break;
+    case 'investor':
+      journeyId = process.env.MAILCHIMP_INVESTOR_JOURNEY_ID?.trim() || undefined;
+      journeyStepId = process.env.MAILCHIMP_INVESTOR_JOURNEY_STEP_ID?.trim() || undefined;
+      defaultTag = process.env.MAILCHIMP_INVESTOR_TAG?.trim() || undefined;
+      break;
+    case 'student':
+      journeyId = process.env.MAILCHIMP_STUDENT_JOURNEY_ID?.trim() || undefined;
+      journeyStepId = process.env.MAILCHIMP_STUDENT_JOURNEY_STEP_ID?.trim() || undefined;
+      defaultTag = process.env.MAILCHIMP_STUDENT_TAG?.trim() || undefined;
+      break;
   }
 
   return {
@@ -80,7 +165,7 @@ export function getMailchimpConfig(): MailchimpConfig {
 }
 
 /**
- * Validates that required Mailchimp credentials are present.
+ * Validates that required Mailchimp credentials and audience ID are present.
  */
 export function validateMailchimpConfig(config: MailchimpConfig): void {
   if (!config.apiKey) {
@@ -90,7 +175,7 @@ export function validateMailchimpConfig(config: MailchimpConfig): void {
     throw new MailchimpError('MAILCHIMP_SERVER_PREFIX is not configured.');
   }
   if (!config.audienceId) {
-    throw new MailchimpError('MAILCHIMP_AUDIENCE_ID is not configured.');
+    throw new MailchimpError('Mailchimp Audience ID is not configured.');
   }
 }
 
@@ -106,29 +191,75 @@ function getAuthHeader(apiKey: string): Record<string, string> {
 }
 
 /**
- * Adds or updates a subscriber in the Mailchimp Audience using PUT /lists/{list_id}/members/{subscriber_hash}.
+ * Formats and sanitizes merge fields for Mailchimp API.
  */
-export async function addOrUpdateSubscriber(
-  input: AddOrUpdateSubscriberInput
+function sanitizeMergeFields(
+  rawFields?: Record<string, unknown>,
+  firstName?: string,
+  lastName?: string
+): Record<string, unknown> {
+  const mergeFields: Record<string, unknown> = {};
+
+  if (firstName !== undefined && firstName !== null && firstName !== '') {
+    mergeFields.FNAME = String(firstName).trim();
+  }
+  if (lastName !== undefined && lastName !== null && lastName !== '') {
+    mergeFields.LNAME = String(lastName).trim();
+  }
+
+  if (rawFields && typeof rawFields === 'object') {
+    for (const [key, value] of Object.entries(rawFields)) {
+      if (value === undefined || value === null || value === '') {
+        continue;
+      }
+      if (typeof value === 'object') {
+        // Exclude file references, buffers, arrays, or objects
+        continue;
+      }
+      const tag = key.trim().toUpperCase();
+      if (tag) {
+        mergeFields[tag] = typeof value === 'string' ? value.trim() : value;
+      }
+    }
+  }
+
+  return mergeFields;
+}
+
+/**
+ * General, reusable method to add or update a member in any Mailchimp Audience.
+ * Uses idempotent PUT /lists/{list_id}/members/{subscriber_hash}.
+ */
+export async function addOrUpdateMember(
+  input: AddOrUpdateMemberInput
 ): Promise<MailchimpMemberResult> {
-  const config = getMailchimpConfig();
-  validateMailchimpConfig(config);
+  const target = input.target || 'subscriber';
+  const config = getMailchimpConfig(target);
+
+  const audienceId = input.audienceId?.trim() || config.audienceId;
+  const activeConfig: MailchimpConfig = {
+    ...config,
+    audienceId,
+    journeyId: input.journeyId || config.journeyId,
+    journeyStepId: input.journeyStepId || config.journeyStepId,
+    defaultTag: input.defaultTag || config.defaultTag,
+  };
+
+  validateMailchimpConfig(activeConfig);
 
   const subscriberHash = getSubscriberHash(input.email);
-  const url = `https://${config.serverPrefix}.api.mailchimp.com/3.0/lists/${config.audienceId}/members/${subscriberHash}`;
+  const url = `https://${activeConfig.serverPrefix}.api.mailchimp.com/3.0/lists/${activeConfig.audienceId}/members/${subscriberHash}`;
 
-  const mergeFields: Record<string, string> = {};
-  if (input.firstName !== undefined && input.firstName !== null && input.firstName !== '') {
-    mergeFields.FNAME = input.firstName.trim();
-  }
-  if (input.lastName !== undefined && input.lastName !== null && input.lastName !== '') {
-    mergeFields.LNAME = input.lastName.trim();
-  }
+  const mergeFields = sanitizeMergeFields(input.mergeFields, input.firstName, input.lastName);
 
   const payload: Record<string, unknown> = {
     email_address: input.email.trim().toLowerCase(),
     status_if_new: input.statusIfNew || 'subscribed',
   };
+
+  if (input.status) {
+    payload.status = input.status;
+  }
 
   if (Object.keys(mergeFields).length > 0) {
     payload.merge_fields = mergeFields;
@@ -138,7 +269,7 @@ export async function addOrUpdateSubscriber(
   try {
     response = await fetch(url, {
       method: 'PUT',
-      headers: getAuthHeader(config.apiKey),
+      headers: getAuthHeader(activeConfig.apiKey),
       body: JSON.stringify(payload),
     });
   } catch (error) {
@@ -167,32 +298,33 @@ export async function addOrUpdateSubscriber(
   const tagsToAdd: string[] = [];
   if (input.tags && input.tags.length > 0) {
     tagsToAdd.push(...input.tags);
-  } else if (config.defaultTag) {
-    tagsToAdd.push(config.defaultTag);
+  } else if (activeConfig.defaultTag) {
+    tagsToAdd.push(activeConfig.defaultTag);
   }
 
   if (tagsToAdd.length > 0) {
     try {
       await addSubscriberTags({
+        audienceId: activeConfig.audienceId,
         email: input.email,
         tags: tagsToAdd,
       });
     } catch (tagError) {
       // Non-fatal warning if tag assignment fails
-      console.warn('[Mailchimp] Could not apply tags to subscriber:', tagError);
+      console.warn(`[Mailchimp] Could not apply tags to member (${input.email}):`, tagError);
     }
   }
 
   // Handle optional Customer Journey API trigger
-  if (config.journeyId && config.journeyStepId) {
+  if (activeConfig.journeyId && activeConfig.journeyStepId) {
     try {
       await triggerCustomerJourney({
         email: input.email,
-        journeyId: config.journeyId,
-        stepId: config.journeyStepId,
+        journeyId: activeConfig.journeyId,
+        stepId: activeConfig.journeyStepId,
       });
     } catch (journeyError) {
-      console.warn('[Mailchimp] Customer Journey trigger failed:', journeyError);
+      console.warn(`[Mailchimp] Customer Journey trigger failed for ${input.email}:`, journeyError);
     }
   }
 
@@ -204,17 +336,34 @@ export async function addOrUpdateSubscriber(
 }
 
 /**
- * Adds tags to an existing subscriber in Mailchimp.
+ * Backward-compatible helper for Subscriber/Newsletter form.
+ */
+export async function addOrUpdateSubscriber(
+  input: AddOrUpdateSubscriberInput
+): Promise<MailchimpMemberResult> {
+  return addOrUpdateMember({
+    ...input,
+    target: 'subscriber',
+  });
+}
+
+/**
+ * Adds tags to an existing subscriber in a Mailchimp Audience.
  */
 export async function addSubscriberTags(input: {
+  audienceId?: string;
   email: string;
   tags: string[];
 }): Promise<void> {
-  const config = getMailchimpConfig();
-  validateMailchimpConfig(config);
+  const audienceId = input.audienceId || getAudienceId('subscriber');
+  const { apiKey, serverPrefix } = getMailchimpAuth();
+
+  if (!apiKey || !serverPrefix || !audienceId) {
+    throw new MailchimpError('Mailchimp configuration is incomplete for adding tags.');
+  }
 
   const subscriberHash = getSubscriberHash(input.email);
-  const url = `https://${config.serverPrefix}.api.mailchimp.com/3.0/lists/${config.audienceId}/members/${subscriberHash}/tags`;
+  const url = `https://${serverPrefix}.api.mailchimp.com/3.0/lists/${audienceId}/members/${subscriberHash}/tags`;
 
   const body = {
     tags: input.tags.map((tag) => ({
@@ -225,7 +374,7 @@ export async function addSubscriberTags(input: {
 
   const response = await fetch(url, {
     method: 'POST',
-    headers: getAuthHeader(config.apiKey),
+    headers: getAuthHeader(apiKey),
     body: JSON.stringify(body),
   });
 
@@ -249,14 +398,16 @@ export async function triggerCustomerJourney(input: {
   journeyId: string;
   stepId: string;
 }): Promise<void> {
-  const config = getMailchimpConfig();
-  validateMailchimpConfig(config);
+  const { apiKey, serverPrefix } = getMailchimpAuth();
+  if (!apiKey || !serverPrefix) {
+    throw new MailchimpError('Mailchimp API credentials missing for customer journey trigger.');
+  }
 
-  const url = `https://${config.serverPrefix}.api.mailchimp.com/3.0/customer-journeys/journeys/${input.journeyId}/steps/${input.stepId}/actions/trigger`;
+  const url = `https://${serverPrefix}.api.mailchimp.com/3.0/customer-journeys/journeys/${input.journeyId}/steps/${input.stepId}/actions/trigger`;
 
   const response = await fetch(url, {
     method: 'POST',
-    headers: getAuthHeader(config.apiKey),
+    headers: getAuthHeader(apiKey),
     body: JSON.stringify({ email_address: input.email.trim().toLowerCase() }),
   });
 
@@ -273,10 +424,13 @@ export async function triggerCustomerJourney(input: {
 }
 
 /**
- * Fetches subscriber details from Mailchimp by email.
+ * Fetches member details from Mailchimp by email.
  */
-export async function getSubscriber(email: string): Promise<MailchimpMemberResult | null> {
-  const config = getMailchimpConfig();
+export async function getSubscriber(
+  email: string,
+  target: MailchimpTarget = 'subscriber'
+): Promise<MailchimpMemberResult | null> {
+  const config = getMailchimpConfig(target);
   validateMailchimpConfig(config);
 
   const subscriberHash = getSubscriberHash(email);
@@ -311,10 +465,40 @@ export async function getSubscriber(email: string): Promise<MailchimpMemberResul
 }
 
 /**
- * Checks which Mailchimp environment variables are missing.
+ * Checks which Mailchimp environment variables are missing for a target audience.
  */
-export function getMissingMailchimpConfig(): string[] {
-  return ['MAILCHIMP_API_KEY', 'MAILCHIMP_AUDIENCE_ID'].filter(
-    (name) => !process.env[name]?.trim()
-  );
+export function getMissingMailchimpConfig(target: MailchimpTarget = 'subscriber'): string[] {
+  const missing: string[] = [];
+  if (!process.env.MAILCHIMP_API_KEY?.trim()) {
+    missing.push('MAILCHIMP_API_KEY');
+  }
+
+  switch (target) {
+    case 'subscriber':
+      if (
+        !process.env.MAILCHIMP_SUBSCRIBER_AUDIENCE_ID?.trim() &&
+        !process.env.MAILCHIMP_AUDIENCE_ID?.trim()
+      ) {
+        missing.push('MAILCHIMP_SUBSCRIBER_AUDIENCE_ID');
+      }
+      break;
+    case 'company':
+      if (!process.env.MAILCHIMP_COMPANY_AUDIENCE_ID?.trim()) {
+        missing.push('MAILCHIMP_COMPANY_AUDIENCE_ID');
+      }
+      break;
+    case 'investor':
+      if (!process.env.MAILCHIMP_INVESTOR_AUDIENCE_ID?.trim()) {
+        missing.push('MAILCHIMP_INVESTOR_AUDIENCE_ID');
+      }
+      break;
+    case 'student':
+      if (!process.env.MAILCHIMP_STUDENT_AUDIENCE_ID?.trim()) {
+        missing.push('MAILCHIMP_STUDENT_AUDIENCE_ID');
+      }
+      break;
+  }
+
+  return missing;
 }
+

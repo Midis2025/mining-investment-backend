@@ -57,12 +57,21 @@ function warnAboutEmailConfig(strapi: Core.Strapi): void {
 }
 
 function warnAboutMailchimpConfig(strapi: Core.Strapi): void {
-  const missing = getMissingMailchimpConfig();
-  if (missing.length > 0) {
-    strapi.log.warn(
-      `Mailchimp newsletter integration missing env: ${missing.join(', ')}. ` +
-        'Submissions will be saved in Strapi and flagged mailchimpStatus="failed" until configured.'
-    );
+  const audiences: Array<{ target: 'subscriber' | 'company' | 'investor' | 'student'; label: string }> = [
+    { target: 'subscriber', label: 'Newsletter Subscriber' },
+    { target: 'company', label: 'Company Registration' },
+    { target: 'investor', label: 'Investor Registration' },
+    { target: 'student', label: 'Student Sponsorship' },
+  ];
+
+  for (const { target, label } of audiences) {
+    const missing = getMissingMailchimpConfig(target);
+    if (missing.length > 0) {
+      strapi.log.warn(
+        `Mailchimp integration for "${label}" missing env: ${missing.join(', ')}. ` +
+          'Submissions will still be saved in Strapi and flagged mailchimpStatus="failed" until configured.'
+      );
+    }
   }
 }
 
