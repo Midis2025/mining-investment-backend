@@ -931,6 +931,13 @@ export interface ApiPressReleasePressRelease
           preset: 'defaultHtml';
         }
       >;
+    mailchimpCampaignId: Schema.Attribute.String;
+    mailchimpCampaignStatus: Schema.Attribute.Enumeration<
+      ['Pending', 'Sending', 'Sent', 'Failed']
+    > &
+      Schema.Attribute.DefaultTo<'Pending'>;
+    mailchimpError: Schema.Attribute.Text;
+    mailchimpSentAt: Schema.Attribute.DateTime;
     pdfFile: Schema.Attribute.Media<'images' | 'files' | 'videos' | 'audios'>;
     publishedAt: Schema.Attribute.DateTime;
     publishTo: Schema.Attribute.Enumeration<

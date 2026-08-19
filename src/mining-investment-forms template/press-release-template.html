@@ -1,0 +1,612 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>THE Mining Investment Event SAVE THE DATE | Quebec City, June 2-4, 2026</title>
+  
+  <!-- Google Fonts: Inter & Montserrat -->
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=Montserrat:wght@400;500;600;700;800;900&display=swap" rel="stylesheet" />
+
+  <style>
+    /* ==========================================================================
+       THE MINING INVESTMENT EVENT - PRESS RELEASE / SAVE THE DATE TEMPLATE
+       ========================================================================== */
+    :root {
+      --event-red: #A81B32;
+      --event-red-hover: #8F1428;
+      --event-red-light: #FDF2F4;
+      --event-red-border: #E8A8B2;
+      --event-dark-title: #A81B32;
+      --event-text-dark: #1E2229;
+      --event-text-body: #333F4D;
+      --event-text-muted: #64748B;
+      --event-text-disclaimer: #718096;
+      --radius-btn: 10px;
+      --radius-card: 4px;
+      --font-brand: 'Montserrat', 'Inter', system-ui, -apple-system, sans-serif;
+      --font-body: 'Inter', system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+    }
+
+    *, *::before, *::after {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      font-family: var(--font-body);
+      background-color: #E2E8F0;
+      background: radial-gradient(circle at 50% 8%, #F8FAFC 0%, #CBD5E1 100%);
+      color: var(--event-text-body);
+      min-height: 100vh;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      padding: 36px 14px;
+      -webkit-font-smoothing: antialiased;
+      -moz-osx-font-smoothing: grayscale;
+    }
+
+    /* Template Main Card Container */
+    .template-container {
+      width: 100%;
+      max-width: 660px;
+      background: #FFFFFF;
+      box-shadow: 0 16px 48px rgba(0, 0, 0, 0.12), 0 2px 6px rgba(0, 0, 0, 0.04);
+      border-radius: var(--radius-card);
+      overflow: hidden;
+      position: relative;
+    }
+
+    /* Top Header */
+    .template-header {
+      padding: 22px 34px 18px 34px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      background: #FFFFFF;
+      position: relative;
+      z-index: 5;
+    }
+
+    /* Official Quebec City Badge Logo */
+    .brand-logo-container {
+      width: 92px;
+      height: 92px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      user-select: none;
+      transition: transform 0.25s ease;
+    }
+
+    .brand-logo-container:hover {
+      transform: scale(1.03);
+    }
+
+    .brand-logo-img {
+      width: 100%;
+      height: 100%;
+      object-fit: contain;
+      display: block;
+      filter: drop-shadow(0 2px 4px rgba(0,0,0,0.1));
+    }
+
+    /* Hamburger Menu in Header (3 Red Lines) */
+    .header-menu-bars {
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      width: 36px;
+      height: 20px;
+      cursor: pointer;
+      padding: 1px 0;
+      transition: opacity 0.2s ease;
+    }
+
+    .header-menu-bars:hover {
+      opacity: 0.8;
+    }
+
+    .header-menu-bars span {
+      display: block;
+      width: 100%;
+      height: 2.8px;
+      background-color: var(--event-red);
+      border-radius: 2px;
+    }
+
+    /* Top Red Solid Stripe */
+    .header-red-stripe {
+      width: 100%;
+      height: 3.5px;
+      background-color: var(--event-red);
+    }
+
+    /* Main Body Area */
+    .template-body {
+      padding: 44px 38px 36px 38px;
+      position: relative;
+      background-color: #FFFFFF;
+      /* Watermark styling matching the PDF */
+      background-image: 
+        linear-gradient(180deg, rgba(255, 255, 255, 0.95) 0%, rgba(255, 255, 255, 0.90) 100%),
+        radial-gradient(ellipse at 88% 25%, rgba(168, 27, 50, 0.08) 0%, transparent 60%),
+        url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 1200 800' opacity='0.05'%3E%3Cpath fill='%23A81B32' d='M600,100 C620,180 660,160 720,120 C700,220 780,240 840,250 C760,330 800,420 860,460 C760,430 730,550 720,680 C680,680 640,680 600,680 C560,680 520,680 480,680 C470,550 440,430 340,460 C400,420 440,330 360,250 C420,240 500,220 480,120 C540,160 580,180 600,100 Z'/%3E%3C/svg%3E");
+      background-repeat: no-repeat;
+      background-position: center bottom;
+      background-size: cover, cover, 380px auto;
+    }
+
+    /* Hero Press Release Heading */
+    .press-release-heading {
+      font-family: var(--font-brand);
+      font-size: 34px;
+      font-weight: 900;
+      line-height: 1.18;
+      color: var(--event-red);
+      margin-bottom: 30px;
+      letter-spacing: -0.01em;
+    }
+
+    .press-release-heading .heading-line {
+      display: block;
+    }
+
+    /* Body Text Paragraphs */
+    .press-release-content {
+      font-size: 14.5px;
+      line-height: 1.6;
+      color: var(--event-text-body);
+      margin-bottom: 36px;
+    }
+
+    .press-release-content p {
+      margin-bottom: 20px;
+    }
+
+    .press-release-content p:last-child {
+      margin-bottom: 0;
+    }
+
+    .press-release-content strong {
+      font-weight: 700;
+      color: var(--event-text-dark);
+    }
+
+    /* Action Buttons Row */
+    .action-buttons-group {
+      display: flex;
+      align-items: center;
+      gap: 16px;
+      margin-bottom: 38px;
+      flex-wrap: wrap;
+    }
+
+    .btn-action {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 10px;
+      background-color: var(--event-red);
+      color: #FFFFFF;
+      font-family: var(--font-brand);
+      font-size: 14px;
+      font-weight: 700;
+      text-decoration: none;
+      padding: 13px 24px;
+      border-radius: var(--radius-btn);
+      border: 1px solid var(--event-red);
+      transition: all 0.2s ease-in-out;
+      box-shadow: 0 4px 12px rgba(168, 27, 50, 0.22);
+      cursor: pointer;
+      text-align: center;
+      min-height: 48px;
+    }
+
+    .btn-action:hover {
+      background-color: var(--event-red-hover);
+      border-color: var(--event-red-hover);
+      box-shadow: 0 6px 18px rgba(168, 27, 50, 0.32);
+      transform: translateY(-1.5px);
+      color: #FFFFFF;
+    }
+
+    .btn-action:active {
+      transform: translateY(0);
+      box-shadow: 0 2px 6px rgba(168, 27, 50, 0.2);
+    }
+
+    .btn-action svg {
+      width: 17px;
+      height: 17px;
+      fill: currentColor;
+      flex-shrink: 0;
+      transition: transform 0.2s ease;
+    }
+
+    .btn-action:hover svg {
+      transform: translateX(2px);
+    }
+
+    .btn-pdf:hover svg {
+      transform: scale(1.12);
+    }
+
+    /* Section Divider Line */
+    .content-divider {
+      height: 1px;
+      background: linear-gradient(90deg, rgba(232, 168, 178, 0.2) 0%, rgba(168, 27, 50, 0.4) 50%, rgba(232, 168, 178, 0.2) 100%);
+      margin-bottom: 28px;
+    }
+
+    /* Social Links Bar */
+    .social-links-wrapper {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      gap: 14px;
+      margin-bottom: 26px;
+      flex-wrap: wrap;
+    }
+
+    .social-icon-btn {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      width: 40px;
+      height: 40px;
+      border: 1.8px solid var(--event-red);
+      border-radius: 9px;
+      color: var(--event-red);
+      background: #FFFFFF;
+      text-decoration: none;
+      transition: all 0.22s ease-in-out;
+      position: relative;
+    }
+
+    .social-icon-btn svg {
+      width: 18px;
+      height: 18px;
+      fill: currentColor;
+      transition: fill 0.2s ease;
+    }
+
+    .social-icon-btn:hover {
+      background-color: var(--event-red);
+      color: #FFFFFF;
+      transform: translateY(-2px);
+      box-shadow: 0 4px 10px rgba(168, 27, 50, 0.25);
+    }
+
+    /* Contact Info Section */
+    .contact-info-block {
+      text-align: center;
+      font-size: 13.5px;
+      line-height: 1.55;
+      color: var(--event-text-dark);
+      margin-bottom: 28px;
+      padding: 0 8px;
+    }
+
+    .contact-info-block .contact-label {
+      display: block;
+      color: #2D3748;
+      font-weight: 500;
+      margin-bottom: 4px;
+    }
+
+    .contact-info-block a {
+      color: var(--event-text-dark);
+      font-weight: 700;
+      text-decoration: none;
+      transition: color 0.15s ease;
+    }
+
+    .contact-info-block a:hover {
+      color: var(--event-red);
+      text-decoration: underline;
+    }
+
+    /* Footer Section */
+    .template-footer {
+      background-color: #F8FAFC;
+      border-top: 1px solid #EDF2F7;
+      padding: 22px 34px 28px 34px;
+      text-align: center;
+    }
+
+    .footer-copyright {
+      font-family: var(--font-brand);
+      font-size: 12px;
+      font-weight: 700;
+      color: var(--event-red);
+      margin-bottom: 12px;
+      letter-spacing: 0.03em;
+    }
+
+    .footer-copyright a {
+      color: var(--event-red);
+      text-decoration: none;
+      margin: 0 3px;
+      transition: opacity 0.15s ease;
+    }
+
+    .footer-copyright a:hover {
+      text-decoration: underline;
+      opacity: 0.85;
+    }
+
+    .footer-disclaimer {
+      font-size: 10.5px;
+      line-height: 1.5;
+      color: var(--event-text-disclaimer);
+      max-width: 580px;
+      margin: 0 auto;
+      text-align: center;
+    }
+
+    /* Bottom Red Accent Line */
+    .footer-red-stripe {
+      width: 100%;
+      height: 4px;
+      background-color: var(--event-red);
+    }
+
+    /* ==========================================================================
+       RESPONSIVE DESIGN & MEDIA QUERIES
+       ========================================================================== */
+    @media (max-width: 640px) {
+      body {
+        padding: 12px 6px 24px;
+      }
+
+      .template-header {
+        padding: 18px 20px 14px;
+      }
+
+      .brand-logo-container {
+        width: 78px;
+        height: 78px;
+      }
+
+      .template-body {
+        padding: 28px 20px 24px;
+      }
+
+      .press-release-heading {
+        font-size: 26px;
+        line-height: 1.22;
+        margin-bottom: 22px;
+      }
+
+      .press-release-content {
+        font-size: 13.5px;
+        line-height: 1.55;
+        margin-bottom: 28px;
+      }
+
+      .action-buttons-group {
+        flex-direction: column;
+        width: 100%;
+        gap: 12px;
+        margin-bottom: 30px;
+      }
+
+      .btn-action {
+        width: 100%;
+        padding: 12px 18px;
+        font-size: 13.5px;
+      }
+
+      .social-links-wrapper {
+        gap: 10px;
+        margin-bottom: 20px;
+      }
+
+      .social-icon-btn {
+        width: 36px;
+        height: 36px;
+        border-radius: 8px;
+      }
+
+      .social-icon-btn svg {
+        width: 16px;
+        height: 16px;
+      }
+
+      .contact-info-block {
+        font-size: 12.5px;
+        margin-bottom: 20px;
+      }
+
+      .template-footer {
+        padding: 18px 16px 22px;
+      }
+
+      .footer-copyright {
+        font-size: 11px;
+      }
+
+      .footer-disclaimer {
+        font-size: 9.5px;
+        line-height: 1.45;
+      }
+    }
+
+    @media (max-width: 380px) {
+      .press-release-heading {
+        font-size: 22px;
+      }
+
+      .brand-logo-container {
+        width: 68px;
+        height: 68px;
+      }
+
+      .header-menu-bars {
+        width: 30px;
+        height: 18px;
+      }
+    }
+
+    /* Print Styles */
+    @media print {
+      body {
+        background: #FFFFFF;
+        padding: 0;
+      }
+
+      .template-container {
+        box-shadow: none;
+        max-width: 100%;
+      }
+
+      .btn-action {
+        box-shadow: none !important;
+      }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- MAIN TEMPLATE CONTAINER -->
+  <main class="template-container">
+
+    <!-- Top Header: Quebec City Badge Logo & Menu Icon -->
+    <header class="template-header">
+      
+      <!-- Quebec City THE Mining Investment Event Logo Image -->
+      <a href="https://themininginvestmentevent.com" target="_blank" rel="noopener noreferrer" class="brand-logo-container" title="Quebec City THE Mining Investment EVENT Canada">
+        <img 
+          src="https://res.cloudinary.com/aqxk0lje/image/upload/v1784805578/investment/settings/eymjzzdobondwqqrjfyu.png" 
+          alt="Quebec City THE Mining Investment EVENT Canada" 
+          class="brand-logo-img"
+          loading="eager"
+        />
+      </a>
+
+      <!-- 3 Horizontal Red Bars (Hamburger Icon) -->
+      <div class="header-menu-bars" aria-label="Navigation Menu" role="button" tabindex="0">
+        <span></span>
+        <span></span>
+        <span></span>
+      </div>
+
+    </header>
+
+    <!-- Top Red Stripe Line -->
+    <div class="header-red-stripe"></div>
+
+    <!-- Main Template Body Content -->
+    <div class="template-body">
+      
+      <!-- Main Press Release Heading -->
+      <h1 class="press-release-heading">
+        <span class="heading-line">THE Mining Investment</span>
+        <span class="heading-line">Event SAVE THE DATE</span>
+        <span class="heading-line">Quebec City, June 2-4,</span>
+        <span class="heading-line">2026</span>
+      </h1>
+
+      <!-- Press Release Content -->
+      <div class="press-release-content">
+        <p>
+          <strong>Toronto, Ontario--(Newsfile Corp. - June 12, 2025)</strong> - <strong>THE Mining Investment Event (&ldquo;THE Event&rdquo;), Canada&rsquo;s Only Tier 1 Global Mining Investment Conference&copy;</strong>, is pleased to announce that the fifth edition of THE Event will be held on <strong>June 2-4, 2026</strong> at the <strong>Centre des congr&egrave;s</strong> in Quebec City.
+        </p>
+
+        <p>
+          THE Event 2025 saw a significant 20% growth in attendance, a clear testament to its increasing importance and relevance in the mining conference space. Almost 1,000 registrants attended in Quebec City, which included international issuers, investors, sponsors, government authorities, 50+ sponsors and partners, as well as 50 students who participated in our innovative and interactive Glencore Student Sponsorship Program. Over three days, THE Event facilitated 2,000+ one-on-one meetings and featured 60 issuers on the main stage. We hosted 17 panels and keynote.....
+        </p>
+      </div>
+
+      <!-- Action Buttons Row -->
+      <div class="action-buttons-group">
+        <!-- Click to read full story -->
+        <a href="#" class="btn-action" title="Click to read full story" target="_blank" rel="noopener noreferrer">
+          <span>Click to read full story</span>
+          <!-- External Link Icon -->
+          <svg viewBox="0 0 24 24" aria-hidden="true">
+            <path d="M19 19H5V5h7V3H5a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7h-2v7zM14 3v2h3.59l-9.83 9.83 1.41 1.41L19 6.41V10h2V3h-7z"/>
+          </svg>
+        </a>
+
+        <!-- Open PDF -->
+        <a href="#" class="btn-action btn-pdf" title="Open PDF Document" target="_blank" rel="noopener noreferrer">
+          <!-- Document / PDF Icon -->
+          <svg viewBox="0 0 24 24" aria-hidden="true">
+            <path d="M20 2H8c-1.1 0-2 .9-2 2v12c0 1.1.9 2 2 2h12c1.1 0 2-.9 2-2V4c0-1.1-.9-2-2-2zm-8.5 7.5c0 .83-.67 1.5-1.5 1.5H9v2H7.5V7H10c.83 0 1.5.67 1.5 1.5v1zm5 2c0 .83-.67 1.5-1.5 1.5h-2.5V7H15c.83 0 1.5.67 1.5 1.5v3zm4-3H19v1h1.5V11H19v2h-1.5V7h3v1.5zM9 9.5h1v-1H9v1zM4 6H2v14c0 1.1.9 2 2 2h14v-2H4V6zm10 5.5h1v-3h-1v3z"/>
+          </svg>
+          <span>Open PDF</span>
+        </a>
+      </div>
+
+      <!-- Divider Line -->
+      <div class="content-divider"></div>
+
+      <!-- Social Media Outlined Icons Row -->
+      <div class="social-links-wrapper">
+        <!-- LinkedIn -->
+        <a href="https://www.linkedin.com" target="_blank" rel="noopener noreferrer" class="social-icon-btn" title="LinkedIn" aria-label="LinkedIn">
+          <svg viewBox="0 0 24 24" aria-hidden="true">
+            <path d="M19 3a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h14m-.5 15.5v-5.3a3.26 3.26 0 0 0-3.26-3.26c-.85 0-1.84.52-2.28 1.3v-1.11h-2.79v8.37h2.79v-4.93c0-.77.62-1.4 1.39-1.4a1.4 1.4 0 0 1 1.4 1.4v4.93h2.75M6.88 8.56a1.68 1.68 0 0 0 1.68-1.68c0-.93-.75-1.69-1.68-1.69a1.69 1.69 0 0 0-1.69 1.69c0 .93.76 1.68 1.69 1.68m1.39 9.94v-8.37H5.5v8.37h2.77z"/>
+          </svg>
+        </a>
+
+        <!-- X (formerly Twitter) -->
+        <a href="https://twitter.com" target="_blank" rel="noopener noreferrer" class="social-icon-btn" title="X (Twitter)" aria-label="X (Twitter)">
+          <svg viewBox="0 0 24 24" aria-hidden="true">
+            <path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z"/>
+          </svg>
+        </a>
+
+        <!-- Facebook -->
+        <a href="https://facebook.com" target="_blank" rel="noopener noreferrer" class="social-icon-btn" title="Facebook" aria-label="Facebook">
+          <svg viewBox="0 0 24 24" aria-hidden="true">
+            <path d="M22 12c0-5.52-4.48-10-10-10S2 6.48 2 12c0 4.84 3.44 8.87 8 9.8V15H8v-3h2V9.5C10 7.57 11.57 6 13.5 6H16v3h-2c-.55 0-1 .45-1 1v2h3v3h-3v6.95C18.05 21.45 22 17.19 22 12z"/>
+          </svg>
+        </a>
+
+        <!-- YouTube / Video Play -->
+        <a href="https://youtube.com" target="_blank" rel="noopener noreferrer" class="social-icon-btn" title="YouTube" aria-label="YouTube">
+          <svg viewBox="0 0 24 24" aria-hidden="true">
+            <path d="M10 15l5.19-3L10 9v6m11.56-7.83c.13.47.22 1.1.28 1.9.07.8.1 1.49.1 2.09L22 12c0 2.19-.16 3.8-.44 4.83-.25.9-.83 1.48-1.73 1.73-.47.13-1.33.22-2.65.28-1.3.07-2.49.1-3.59.1L12 22c-4.19 0-6.8-.16-7.83-.44-.9-.25-1.48-.83-1.73-1.73-.13-.47-.22-1.1-.28-1.9-.07-.8-.1-1.49-.1-2.09L2 12c0-2.19.16-3.8.44-4.83.25-.9.83-1.48 1.73-1.73.47-.13 1.33-.22 2.65-.28 1.3-.07 2.49-.1 3.59-.1L12 2c4.19 0 6.8.16 7.83.44.9.25 1.48.83 1.73 1.73z"/>
+          </svg>
+        </a>
+
+        <!-- Instagram -->
+        <a href="https://instagram.com" target="_blank" rel="noopener noreferrer" class="social-icon-btn" title="Instagram" aria-label="Instagram">
+          <svg viewBox="0 0 24 24" aria-hidden="true">
+            <path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zm0-2.163c-3.259 0-3.667.014-4.947.072-4.358.2-6.78 2.618-6.98 6.98-.059 1.281-.073 1.689-.073 4.948 0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98 1.281.058 1.689.072 4.948.072 3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98-1.281-.059-1.69-.073-4.949-.073zm0 5.838c-3.403 0-6.162 2.759-6.162 6.162s2.759 6.163 6.162 6.163 6.162-2.759 6.162-6.163c0-3.403-2.759-6.162-6.162-6.162zm0 10.162c-2.209 0-4-1.79-4-4 0-2.209 1.791-4 4-4s4 1.791 4 4c0 2.21-1.791 4-4 4zm6.406-11.845c-.796 0-1.441.645-1.441 1.44s.645 1.44 1.441 1.44c.795 0 1.439-.645 1.439-1.44s-.644-1.44-1.439-1.44z"/>
+          </svg>
+        </a>
+      </div>
+
+      <!-- Contact Info Section -->
+      <div class="contact-info-block">
+        <span class="contact-label">For more information about 'THE Event' programming or registration, please</span>
+        <span>contact <a href="mailto:jchoi@irinc.ca">jchoi@irinc.ca</a> or call <a href="tel:+19055153508">+1-905-515-3508</a>.</span>
+      </div>
+
+    </div>
+
+    <!-- Template Footer with Disclaimer -->
+    <footer class="template-footer">
+      <div class="footer-copyright">
+        &copy; 2026 THE MINING INVESTMENT EVENT | <a href="#">DISCLAIMER</a> | <a href="#">Privacy Policy</a>
+      </div>
+      <p class="footer-disclaimer">
+        This website, the events, information and materials pertaining to and associated with THE Mining Investment Event, are not and should not be construed as an offer to buy or sell, or as a solicitation of an offer to buy or sell, sponsor, advocate, endorse, promote or be construed as making any recommendation or providing investment or other advice for any regulated products, securities or investments.
+      </p>
+    </footer>
+
+    <!-- Bottom Red Accent Stripe -->
+    <div class="footer-red-stripe"></div>
+
+  </main>
+
+</body>
+</html>

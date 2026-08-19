@@ -47,6 +47,25 @@
         "International Mining Week",
         "Noble Mining Conference"
       ]
+    },
+    "mailchimpCampaignId": {
+      "type": "string"
+    },
+    "mailchimpCampaignStatus": {
+      "type": "enumeration",
+      "enum": [
+        "Pending",
+        "Sending",
+        "Sent",
+        "Failed"
+      ],
+      "default": "Pending"
+    },
+    "mailchimpSentAt": {
+      "type": "datetime"
+    },
+    "mailchimpError": {
+      "type": "text"
     }
   }
 }

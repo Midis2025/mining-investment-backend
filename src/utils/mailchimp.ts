@@ -502,3 +502,288 @@ export function getMissingMailchimpConfig(target: MailchimpTarget = 'subscriber'
   return missing;
 }
 
+/**
+ * Interface for creating a Mailchimp campaign.
+ */
+export interface CreateCampaignInput {
+  audienceId?: string;
+  subject: string;
+  title: string;
+  fromName?: string;
+  replyTo?: string;
+  previewText?: string;
+}
+
+export interface MailchimpCampaignResult {
+  id: string;
+  webId?: number;
+  status: string;
+  type?: string;
+  createTime?: string;
+}
+
+/**
+ * Creates a regular Mailchimp campaign for an audience.
+ * Uses POST /campaigns.
+ */
+export async function createMailchimpCampaign(
+  input: CreateCampaignInput
+): Promise<MailchimpCampaignResult> {
+  const { apiKey, serverPrefix } = getMailchimpAuth();
+  const audienceId = input.audienceId || getAudienceId('subscriber');
+
+  if (!apiKey || !serverPrefix || !audienceId) {
+    throw new MailchimpError(
+      'Mailchimp configuration is incomplete for creating a campaign.'
+    );
+  }
+
+  const url = `https://${serverPrefix}.api.mailchimp.com/3.0/campaigns`;
+
+  const payload: Record<string, unknown> = {
+    type: 'regular',
+    recipients: {
+      list_id: audienceId,
+    },
+    settings: {
+      subject_line: input.subject,
+      title: input.title,
+      from_name: input.fromName,
+      reply_to: input.replyTo,
+    },
+  };
+
+  if (input.previewText) {
+    (payload.settings as Record<string, unknown>).preview_text = input.previewText;
+  }
+
+  let response: Response;
+  try {
+    response = await fetch(url, {
+      method: 'POST',
+      headers: getAuthHeader(apiKey),
+      body: JSON.stringify(payload),
+    });
+  } catch (error) {
+    throw new MailchimpError(
+      `Network error creating Mailchimp campaign: ${error instanceof Error ? error.message : 'Unknown error'}`
+    );
+  }
+
+  let responseData: any = {};
+  try {
+    responseData = await response.json();
+  } catch {
+    responseData = {};
+  }
+
+  if (!response.ok) {
+    const errorDetail = responseData?.detail || responseData?.title || response.statusText;
+    throw new MailchimpError(`Failed to create Mailchimp campaign: ${errorDetail}`, {
+      status: response.status,
+      detail: responseData?.detail,
+      title: responseData?.title,
+    });
+  }
+
+  return {
+    id: responseData.id,
+    webId: responseData.web_id,
+    status: responseData.status || 'save',
+    type: responseData.type,
+    createTime: responseData.create_time,
+  };
+}
+
+/**
+ * Sets or updates the HTML content of an existing Mailchimp campaign.
+ * Uses PUT /campaigns/{campaign_id}/content.
+ */
+export async function setMailchimpCampaignContent(
+  campaignId: string,
+  html: string
+): Promise<void> {
+  const { apiKey, serverPrefix } = getMailchimpAuth();
+  if (!apiKey || !serverPrefix) {
+    throw new MailchimpError('Mailchimp configuration is incomplete for setting campaign content.');
+  }
+
+  const url = `https://${serverPrefix}.api.mailchimp.com/3.0/campaigns/${campaignId}/content`;
+
+  let response: Response;
+  try {
+    response = await fetch(url, {
+      method: 'PUT',
+      headers: getAuthHeader(apiKey),
+      body: JSON.stringify({ html }),
+    });
+  } catch (error) {
+    throw new MailchimpError(
+      `Network error setting Mailchimp campaign content: ${error instanceof Error ? error.message : 'Unknown error'}`
+    );
+  }
+
+  if (!response.ok) {
+    let errorDetail = response.statusText;
+    try {
+      const errJson = (await response.json()) as any;
+      errorDetail = errJson?.detail || errJson?.title || errorDetail;
+    } catch {}
+    throw new MailchimpError(`Failed to set Mailchimp campaign content: ${errorDetail}`, {
+      status: response.status,
+    });
+  }
+}
+
+/**
+ * Sends a Mailchimp campaign to the target audience.
+ * Uses POST /campaigns/{campaign_id}/actions/send.
+ */
+export async function sendMailchimpCampaign(campaignId: string): Promise<void> {
+  const { apiKey, serverPrefix } = getMailchimpAuth();
+  if (!apiKey || !serverPrefix) {
+    throw new MailchimpError('Mailchimp configuration is incomplete for sending campaign.');
+  }
+
+  const url = `https://${serverPrefix}.api.mailchimp.com/3.0/campaigns/${campaignId}/actions/send`;
+
+  let response: Response;
+  try {
+    response = await fetch(url, {
+      method: 'POST',
+      headers: getAuthHeader(apiKey),
+    });
+  } catch (error) {
+    throw new MailchimpError(
+      `Network error sending Mailchimp campaign: ${error instanceof Error ? error.message : 'Unknown error'}`
+    );
+  }
+
+  if (!response.ok && response.status !== 204) {
+    let errorDetail = response.statusText;
+    try {
+      const errJson = (await response.json()) as any;
+      errorDetail = errJson?.detail || errJson?.title || errorDetail;
+    } catch {}
+    throw new MailchimpError(`Failed to send Mailchimp campaign: ${errorDetail}`, {
+      status: response.status,
+    });
+  }
+}
+
+/**
+ * Sends a test email for a campaign to specified email addresses.
+ * Uses POST /campaigns/{campaign_id}/actions/test.
+ */
+export async function sendMailchimpTestCampaign(
+  campaignId: string,
+  testEmails: string[]
+): Promise<void> {
+  const { apiKey, serverPrefix } = getMailchimpAuth();
+  if (!apiKey || !serverPrefix) {
+    throw new MailchimpError('Mailchimp configuration is incomplete for sending test campaign.');
+  }
+
+  const url = `https://${serverPrefix}.api.mailchimp.com/3.0/campaigns/${campaignId}/actions/test`;
+
+  let response: Response;
+  try {
+    response = await fetch(url, {
+      method: 'POST',
+      headers: getAuthHeader(apiKey),
+      body: JSON.stringify({
+        test_emails: testEmails,
+        send_type: 'html',
+      }),
+    });
+  } catch (error) {
+    throw new MailchimpError(
+      `Network error sending Mailchimp test campaign: ${error instanceof Error ? error.message : 'Unknown error'}`
+    );
+  }
+
+  if (!response.ok && response.status !== 204) {
+    let errorDetail = response.statusText;
+    try {
+      const errJson = (await response.json()) as any;
+      errorDetail = errJson?.detail || errJson?.title || errorDetail;
+    } catch {}
+    throw new MailchimpError(`Failed to send Mailchimp test campaign: ${errorDetail}`, {
+      status: response.status,
+    });
+  }
+}
+
+/**
+ * Retrieves an existing campaign by ID from Mailchimp.
+ * Uses GET /campaigns/{campaign_id}.
+ */
+export async function getMailchimpCampaign(
+  campaignId: string
+): Promise<Record<string, any> | null> {
+  const { apiKey, serverPrefix } = getMailchimpAuth();
+  if (!apiKey || !serverPrefix) {
+    return null;
+  }
+
+  const url = `https://${serverPrefix}.api.mailchimp.com/3.0/campaigns/${campaignId}`;
+
+  try {
+    const response = await fetch(url, {
+      method: 'GET',
+      headers: getAuthHeader(apiKey),
+    });
+
+    if (response.status === 404) {
+      return null;
+    }
+
+    if (!response.ok) {
+      return null;
+    }
+
+    return (await response.json()) as Record<string, any>;
+  } catch {
+    return null;
+  }
+}
+
+/**
+ * Retrieves campaign defaults (from_name, from_email, etc.) for a Mailchimp Audience list.
+ */
+export async function getMailchimpAudienceDefaults(
+  audienceId: string
+): Promise<{ fromName?: string; fromEmail?: string; subject?: string } | null> {
+  const { apiKey, serverPrefix } = getMailchimpAuth();
+  if (!apiKey || !serverPrefix || !audienceId) {
+    return null;
+  }
+
+  const url = `https://${serverPrefix}.api.mailchimp.com/3.0/lists/${audienceId}`;
+
+  try {
+    const response = await fetch(url, {
+      method: 'GET',
+      headers: getAuthHeader(apiKey),
+    });
+
+    if (!response.ok) {
+      return null;
+    }
+
+    const data = (await response.json()) as any;
+    const defaults = data?.campaign_defaults;
+    if (defaults) {
+      return {
+        fromName: defaults.from_name || undefined,
+        fromEmail: defaults.from_email || undefined,
+        subject: defaults.subject || undefined,
+      };
+    }
+    return null;
+  } catch {
+    return null;
+  }
+}
+
+
