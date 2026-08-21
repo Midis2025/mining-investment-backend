@@ -52,6 +52,16 @@ const SOURCE_ALIASES: Readonly<Record<string, SourceWebsite>> = {
 };
 
 /**
+ * True when no source was supplied at all, as opposed to one that was supplied
+ * but is not recognised. Callers fall back to a per-content-type default only
+ * for the former: a value that is present but wrong should surface as a
+ * warning, never be silently rewritten.
+ */
+export function isBlankSource(raw: unknown): boolean {
+  return raw === undefined || raw === null || String(raw).trim() === '';
+}
+
+/**
  * Resolves a submitted `sourceWebsite` to its canonical name.
  * Returns `null` when the value is missing, blank or unrecognised.
  */

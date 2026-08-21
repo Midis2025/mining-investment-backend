@@ -27,7 +27,12 @@ import {
   type MailchimpMemberStatus,
   type MailchimpTarget,
 } from './mailchimp';
-import { resolveSourceTag, SOURCE_WEBSITES, type SourceWebsite } from './source-website';
+import {
+  isBlankSource,
+  resolveSourceTag,
+  SOURCE_WEBSITES,
+  type SourceWebsite,
+} from './source-website';
 
 export interface RegistrationLifecycleEvent {
   result?: Record<string, unknown>;
@@ -59,11 +64,6 @@ interface RegistrationDefinition {
    */
   fallbackSource: SourceWebsite;
   buildMergeFields(entry: Record<string, unknown>): Record<string, unknown>;
-}
-
-/** True when no source was supplied at all, as opposed to an unrecognised one. */
-function isBlank(value: unknown): boolean {
-  return value === undefined || value === null || String(value).trim() === '';
 }
 
 function text(value: unknown): string | undefined {
@@ -246,7 +246,7 @@ export async function deliverRegistrationMailchimpSync(
   let sourceTag = resolveSourceTag(entry.sourceWebsite);
   if (sourceTag) {
     strapi.log.info(`[Mailchimp] Source: ${sourceTag}`);
-  } else if (isBlank(entry.sourceWebsite)) {
+  } else if (isBlankSource(entry.sourceWebsite)) {
     sourceTag = definition.fallbackSource;
     strapi.log.info(`[Mailchimp] Source: ${sourceTag} (default for ${definition.label})`);
   } else {

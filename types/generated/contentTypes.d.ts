@@ -646,7 +646,8 @@ export interface ApiCompanyRegisterationCompanyRegisteration
     sourceWebsite: Schema.Attribute.String &
       Schema.Attribute.SetMinMaxLength<{
         maxLength: 120;
-      }>;
+      }> &
+      Schema.Attribute.DefaultTo<'Mining Investment Event'>;
     tellUsAboutYourself: Schema.Attribute.Text &
       Schema.Attribute.SetMinMaxLength<{
         maxLength: 5000;
@@ -935,7 +936,8 @@ export interface ApiInvestorRegisterationInvestorRegisteration
     sourceWebsite: Schema.Attribute.String &
       Schema.Attribute.SetMinMaxLength<{
         maxLength: 120;
-      }>;
+      }> &
+      Schema.Attribute.DefaultTo<'Mining Investment Event'>;
     tellUsAboutYourself: Schema.Attribute.Text &
       Schema.Attribute.SetMinMaxLength<{
         maxLength: 5000;

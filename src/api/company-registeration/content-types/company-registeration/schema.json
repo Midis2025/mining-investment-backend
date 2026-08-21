@@ -84,7 +84,8 @@
     },
     "sourceWebsite": {
       "type": "string",
-      "maxLength": 120
+      "maxLength": 120,
+      "default": "Mining Investment Event"
     }
   }
 }

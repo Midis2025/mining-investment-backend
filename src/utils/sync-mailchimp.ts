@@ -20,7 +20,43 @@ import {
   type MailchimpMemberStatus,
   type MailchimpTarget,
 } from './mailchimp';
-import { resolveSourceTag } from './source-website';
+import {
+  isBlankSource,
+  resolveSourceTag,
+  SOURCE_WEBSITES,
+  type SourceWebsite,
+} from './source-website';
+
+/**
+ * The website each form's content type belongs to, used when `sourceWebsite`
+ * is absent or blank. `api::investor-registeration` and
+ * `api::company-registeration` are the Mining Investment Event site's own
+ * content types — Noble and IMW have their own — so this is a per-content-type
+ * constant, not an inference from the request.
+ *
+ * Student Sponsorship is deliberately absent: it syncs to its own audience and
+ * has no source-based automation.
+ */
+const FORM_TYPE_FALLBACK_SOURCE: Partial<Record<FormType, SourceWebsite>> = {
+  investor: SOURCE_WEBSITES.miningInvestmentEvent,
+  company: SOURCE_WEBSITES.miningInvestmentEvent,
+};
+
+/**
+ * Resolves the source tag for a form submission: the submitted value when it is
+ * recognised, otherwise the form's own website when nothing was submitted at
+ * all. A value that is present but unrecognised resolves to `null` so it
+ * surfaces as a warning instead of being silently rewritten.
+ */
+export function resolveFormSourceTag(
+  formType: FormType,
+  rawSourceWebsite: unknown
+): SourceWebsite | null {
+  const resolved = resolveSourceTag(rawSourceWebsite);
+  if (resolved) return resolved;
+  if (isBlankSource(rawSourceWebsite)) return FORM_TYPE_FALLBACK_SOURCE[formType] ?? null;
+  return null;
+}
 
 export interface MailchimpLifecycleEvent {
   result?: Record<string, unknown>;
@@ -126,7 +162,7 @@ export function buildMailchimpPayload(
   // the registration category tag above, so an existing contact keeps every
   // source it has ever registered from. An unknown or missing value adds
   // nothing rather than guessing a source.
-  const sourceTag = resolveSourceTag(entry.sourceWebsite);
+  const sourceTag = resolveFormSourceTag(formType, entry.sourceWebsite);
   if (sourceTag) {
     if (!tags.includes(sourceTag)) {
       tags.push(sourceTag);
@@ -220,14 +256,18 @@ export async function deliverMailchimpSync(
 
   strapi.log.info(`[Mailchimp] Processing ${formType} registration`);
 
-  const sourceTag = resolveSourceTag(entry.sourceWebsite);
+  const sourceTag = resolveFormSourceTag(formType, entry.sourceWebsite);
   if (sourceTag) {
-    strapi.log.info(`[Mailchimp] Source: ${sourceTag}`);
+    const viaDefault = !resolveSourceTag(entry.sourceWebsite);
+    strapi.log.info(
+      `[Mailchimp] Source: ${sourceTag}${viaDefault ? ` (default for ${formType})` : ''}`
+    );
     strapi.log.info(`[Mailchimp] Applying tag: ${sourceTag}`);
   } else {
     strapi.log.warn(
-      `[${formType}] sourceWebsite is missing or unrecognised - no source tag applied. ` +
-        'The registration is still stored and the contact is still synchronised.'
+      `[${formType}] sourceWebsite was supplied but is not a recognised website - ` +
+        'no source tag applied. The registration is still stored and the contact ' +
+        'is still synchronised.'
     );
   }
 
