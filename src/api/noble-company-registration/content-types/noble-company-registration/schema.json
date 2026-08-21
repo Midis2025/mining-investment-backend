@@ -1,0 +1,69 @@
+{
+  "kind": "collectionType",
+  "collectionName": "noble_company_registrations",
+  "info": {
+    "singularName": "noble-company-registration",
+    "pluralName": "noble-company-registrations",
+    "displayName": "Noble-Company-Registration"
+  },
+  "options": {
+    "draftAndPublish": true
+  },
+  "pluginOptions": {},
+  "attributes": {
+    "companyName": {
+      "type": "string"
+    },
+    "tickerSymbolExchange": {
+      "type": "string"
+    },
+    "firstName": {
+      "type": "string"
+    },
+    "lastName": {
+      "type": "string"
+    },
+    "executiveTitle": {
+      "type": "string"
+    },
+    "city": {
+      "type": "string"
+    },
+    "country": {
+      "type": "string"
+    },
+    "email": {
+      "type": "email"
+    },
+    "phone": {
+      "type": "string"
+    },
+    "primaryCommodityResource": {
+      "type": "enumeration",
+      "enum": [
+        "Gold & Silver / Precious Metals",
+        "Copper / Base Metals",
+        "Lithium / Energy Transition",
+        "Uranium / Energy",
+        "Critical Minerals",
+        "Other Mining & Exploration"
+      ]
+    },
+    "marketCapRange": {
+      "type": "enumeration",
+      "enum": [
+        "Under $50M",
+        "Between $50M and $200M",
+        "Between $200M and $500M",
+        "Between $500M and $1B",
+        "Over $1B"
+      ]
+    },
+    "companyOverviewPresentationGoals": {
+      "type": "richtext"
+    },
+    "newsletterOptIn": {
+      "type": "boolean"
+    }
+  }
+}

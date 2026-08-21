@@ -685,6 +685,121 @@ export interface ApiEventEditionEventEdition
   };
 }
 
+export interface ApiImwComapnyRegisterationImwComapnyRegisteration
+  extends Struct.CollectionTypeSchema {
+  collectionName: 'imw_comapny_registerations';
+  info: {
+    displayName: 'IMW-Comapny-Registeration';
+    pluralName: 'imw-comapny-registerations';
+    singularName: 'imw-comapny-registeration';
+  };
+  options: {
+    draftAndPublish: true;
+  };
+  attributes: {
+    city: Schema.Attribute.String;
+    companyName: Schema.Attribute.String;
+    companyProjectDescription: Schema.Attribute.RichText;
+    country: Schema.Attribute.String;
+    createdAt: Schema.Attribute.DateTime;
+    createdBy: Schema.Attribute.Relation<'oneToOne', 'admin::user'> &
+      Schema.Attribute.Private;
+    email: Schema.Attribute.Email;
+    executiveTitle: Schema.Attribute.String;
+    firstName: Schema.Attribute.String;
+    lastName: Schema.Attribute.String;
+    locale: Schema.Attribute.String & Schema.Attribute.Private;
+    localizations: Schema.Attribute.Relation<
+      'oneToMany',
+      'api::imw-comapny-registeration.imw-comapny-registeration'
+    > &
+      Schema.Attribute.Private;
+    newsletterOptIn: Schema.Attribute.Boolean;
+    phone: Schema.Attribute.String;
+    primaryAssetStageFocus: Schema.Attribute.Enumeration<
+      [
+        'Exploration & Discovery',
+        'Development & Feasibility',
+        'Producer / Operational',
+        'Royalty & Streaming',
+        'Energy Transition / Critical Minerals',
+      ]
+    >;
+    publishedAt: Schema.Attribute.DateTime;
+    showcaseInterest: Schema.Attribute.Enumeration<
+      [
+        'One-on-One Executive Meetings',
+        'Corporate Presentation',
+        'Keynote Panel',
+        'Delegate Showcase',
+      ]
+    >;
+    tickerSymbolExchange: Schema.Attribute.String;
+    updatedAt: Schema.Attribute.DateTime;
+    updatedBy: Schema.Attribute.Relation<'oneToOne', 'admin::user'> &
+      Schema.Attribute.Private;
+  };
+}
+
+export interface ApiImwInvestorRegisterationImwInvestorRegisteration
+  extends Struct.CollectionTypeSchema {
+  collectionName: 'imw_investor_registerations';
+  info: {
+    displayName: 'IMW-Investor-Registeration';
+    pluralName: 'imw-investor-registerations';
+    singularName: 'imw-investor-registeration';
+  };
+  options: {
+    draftAndPublish: true;
+  };
+  attributes: {
+    assetsUnderManagement: Schema.Attribute.Enumeration<
+      [
+        'Under $10 Million',
+        'Between $10 Million and $50 Million',
+        'Between $50 Million and $250 Million',
+        'Between $250 Million and $1 Billion',
+        'Over $1 Billion',
+        'HNWI / Personal Accredited Investor',
+      ]
+    >;
+    businessTitle: Schema.Attribute.String;
+    city: Schema.Attribute.String;
+    companyName: Schema.Attribute.String;
+    country: Schema.Attribute.String;
+    createdAt: Schema.Attribute.DateTime;
+    createdBy: Schema.Attribute.Relation<'oneToOne', 'admin::user'> &
+      Schema.Attribute.Private;
+    email: Schema.Attribute.Email;
+    firstName: Schema.Attribute.String;
+    investmentFocus: Schema.Attribute.RichText;
+    investorType: Schema.Attribute.Enumeration<
+      [
+        'Institutional Investor',
+        'Family Office',
+        'High Net Worth Individual (HNWI)',
+        'Fund / Portfolio Manager',
+        'Sovereign Wealth Fund',
+        'Mining Analyst / Investment Banker',
+        'Retail / Accredited Investor',
+      ]
+    >;
+    lastName: Schema.Attribute.String;
+    locale: Schema.Attribute.String & Schema.Attribute.Private;
+    localizations: Schema.Attribute.Relation<
+      'oneToMany',
+      'api::imw-investor-registeration.imw-investor-registeration'
+    > &
+      Schema.Attribute.Private;
+    newsletterOptIn: Schema.Attribute.Boolean;
+    phone: Schema.Attribute.String;
+    publishedAt: Schema.Attribute.DateTime;
+    updatedAt: Schema.Attribute.DateTime;
+    updatedBy: Schema.Attribute.Relation<'oneToOne', 'admin::user'> &
+      Schema.Attribute.Private;
+  };
+}
+
 export interface ApiInvestorRegisterationInvestorRegisteration
   extends Struct.CollectionTypeSchema {
   collectionName: 'investor_registerations';
@@ -851,6 +966,123 @@ export interface ApiMediaPartnerMediaPartner
         'Media & Partners 2031',
       ]
     >;
+  };
+}
+
+export interface ApiNobleCompanyRegistrationNobleCompanyRegistration
+  extends Struct.CollectionTypeSchema {
+  collectionName: 'noble_company_registrations';
+  info: {
+    displayName: 'Noble-Company-Registration';
+    pluralName: 'noble-company-registrations';
+    singularName: 'noble-company-registration';
+  };
+  options: {
+    draftAndPublish: true;
+  };
+  attributes: {
+    city: Schema.Attribute.String;
+    companyName: Schema.Attribute.String;
+    companyOverviewPresentationGoals: Schema.Attribute.RichText;
+    country: Schema.Attribute.String;
+    createdAt: Schema.Attribute.DateTime;
+    createdBy: Schema.Attribute.Relation<'oneToOne', 'admin::user'> &
+      Schema.Attribute.Private;
+    email: Schema.Attribute.Email;
+    executiveTitle: Schema.Attribute.String;
+    firstName: Schema.Attribute.String;
+    lastName: Schema.Attribute.String;
+    locale: Schema.Attribute.String & Schema.Attribute.Private;
+    localizations: Schema.Attribute.Relation<
+      'oneToMany',
+      'api::noble-company-registration.noble-company-registration'
+    > &
+      Schema.Attribute.Private;
+    marketCapRange: Schema.Attribute.Enumeration<
+      [
+        'Under $50M',
+        'Between $50M and $200M',
+        'Between $200M and $500M',
+        'Between $500M and $1B',
+        'Over $1B',
+      ]
+    >;
+    newsletterOptIn: Schema.Attribute.Boolean;
+    phone: Schema.Attribute.String;
+    primaryCommodityResource: Schema.Attribute.Enumeration<
+      [
+        'Gold & Silver / Precious Metals',
+        'Copper / Base Metals',
+        'Lithium / Energy Transition',
+        'Uranium / Energy',
+        'Critical Minerals',
+        'Other Mining & Exploration',
+      ]
+    >;
+    publishedAt: Schema.Attribute.DateTime;
+    tickerSymbolExchange: Schema.Attribute.String;
+    updatedAt: Schema.Attribute.DateTime;
+    updatedBy: Schema.Attribute.Relation<'oneToOne', 'admin::user'> &
+      Schema.Attribute.Private;
+  };
+}
+
+export interface ApiNobleInvestorRegistrationNobleInvestorRegistration
+  extends Struct.CollectionTypeSchema {
+  collectionName: 'noble_investor_registrations';
+  info: {
+    displayName: 'Noble-Investor-Registration';
+    pluralName: 'noble-investor-registrations';
+    singularName: 'noble-investor-registration';
+  };
+  options: {
+    draftAndPublish: true;
+  };
+  attributes: {
+    assetsUnderManagement: Schema.Attribute.Enumeration<
+      [
+        'Under $10 Million',
+        'Between $10 Million and $50 Million',
+        'Between $50 Million and $250 Million',
+        'Between $250 Million and $1 Billion',
+        'Over $1 Billion',
+        'HNWI / Personal Accredited Investor',
+      ]
+    >;
+    businessTitle: Schema.Attribute.String;
+    city: Schema.Attribute.String;
+    companyName: Schema.Attribute.String;
+    country: Schema.Attribute.String;
+    createdAt: Schema.Attribute.DateTime;
+    createdBy: Schema.Attribute.Relation<'oneToOne', 'admin::user'> &
+      Schema.Attribute.Private;
+    email: Schema.Attribute.Email;
+    firstName: Schema.Attribute.String;
+    investmentFocus: Schema.Attribute.RichText;
+    investorType: Schema.Attribute.Enumeration<
+      [
+        'Institutional Investor',
+        'Family Office',
+        'High Net Worth Individual (HNWI)',
+        'Fund / Portfolio Manager',
+        'Sovereign Wealth Fund',
+        'Mining Analyst / Investment Banker',
+        'Retail / Accredited Investor',
+      ]
+    >;
+    lastName: Schema.Attribute.String;
+    locale: Schema.Attribute.String & Schema.Attribute.Private;
+    localizations: Schema.Attribute.Relation<
+      'oneToMany',
+      'api::noble-investor-registration.noble-investor-registration'
+    > &
+      Schema.Attribute.Private;
+    newsletterOptIn: Schema.Attribute.Boolean;
+    phone: Schema.Attribute.String;
+    publishedAt: Schema.Attribute.DateTime;
+    updatedAt: Schema.Attribute.DateTime;
+    updatedBy: Schema.Attribute.Relation<'oneToOne', 'admin::user'> &
+      Schema.Attribute.Private;
   };
 }
 
@@ -1649,8 +1881,12 @@ declare module '@strapi/strapi' {
       'api::brochure.brochure': ApiBrochureBrochure;
       'api::company-registeration.company-registeration': ApiCompanyRegisterationCompanyRegisteration;
       'api::event-edition.event-edition': ApiEventEditionEventEdition;
+      'api::imw-comapny-registeration.imw-comapny-registeration': ApiImwComapnyRegisterationImwComapnyRegisteration;
+      'api::imw-investor-registeration.imw-investor-registeration': ApiImwInvestorRegisterationImwInvestorRegisteration;
       'api::investor-registeration.investor-registeration': ApiInvestorRegisterationInvestorRegisteration;
       'api::media-partner.media-partner': ApiMediaPartnerMediaPartner;
+      'api::noble-company-registration.noble-company-registration': ApiNobleCompanyRegistrationNobleCompanyRegistration;
+      'api::noble-investor-registration.noble-investor-registration': ApiNobleInvestorRegistrationNobleInvestorRegistration;
       'api::participating-company.participating-company': ApiParticipatingCompanyParticipatingCompany;
       'api::press-release.press-release': ApiPressReleasePressRelease;
       'api::speaker.speaker': ApiSpeakerSpeaker;

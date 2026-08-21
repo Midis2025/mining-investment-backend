@@ -1,0 +1,68 @@
+{
+  "kind": "collectionType",
+  "collectionName": "noble_investor_registrations",
+  "info": {
+    "singularName": "noble-investor-registration",
+    "pluralName": "noble-investor-registrations",
+    "displayName": "Noble-Investor-Registration"
+  },
+  "options": {
+    "draftAndPublish": true
+  },
+  "pluginOptions": {},
+  "attributes": {
+    "companyName": {
+      "type": "string"
+    },
+    "firstName": {
+      "type": "string"
+    },
+    "lastName": {
+      "type": "string"
+    },
+    "businessTitle": {
+      "type": "string"
+    },
+    "city": {
+      "type": "string"
+    },
+    "country": {
+      "type": "string"
+    },
+    "email": {
+      "type": "email"
+    },
+    "phone": {
+      "type": "string"
+    },
+    "assetsUnderManagement": {
+      "type": "enumeration",
+      "enum": [
+        "Under $10 Million",
+        "Between $10 Million and $50 Million",
+        "Between $50 Million and $250 Million",
+        "Between $250 Million and $1 Billion",
+        "Over $1 Billion",
+        "HNWI / Personal Accredited Investor"
+      ]
+    },
+    "investorType": {
+      "type": "enumeration",
+      "enum": [
+        "Institutional Investor",
+        "Family Office",
+        "High Net Worth Individual (HNWI)",
+        "Fund / Portfolio Manager",
+        "Sovereign Wealth Fund",
+        "Mining Analyst / Investment Banker",
+        "Retail / Accredited Investor"
+      ]
+    },
+    "investmentFocus": {
+      "type": "richtext"
+    },
+    "newsletterOptIn": {
+      "type": "boolean"
+    }
+  }
+}

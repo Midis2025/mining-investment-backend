@@ -1,0 +1,67 @@
+{
+  "kind": "collectionType",
+  "collectionName": "imw_comapny_registerations",
+  "info": {
+    "singularName": "imw-comapny-registeration",
+    "pluralName": "imw-comapny-registerations",
+    "displayName": "IMW-Comapny-Registeration"
+  },
+  "options": {
+    "draftAndPublish": true
+  },
+  "pluginOptions": {},
+  "attributes": {
+    "companyName": {
+      "type": "string"
+    },
+    "tickerSymbolExchange": {
+      "type": "string"
+    },
+    "firstName": {
+      "type": "string"
+    },
+    "lastName": {
+      "type": "string"
+    },
+    "executiveTitle": {
+      "type": "string"
+    },
+    "city": {
+      "type": "string"
+    },
+    "country": {
+      "type": "string"
+    },
+    "email": {
+      "type": "email"
+    },
+    "phone": {
+      "type": "string"
+    },
+    "primaryAssetStageFocus": {
+      "type": "enumeration",
+      "enum": [
+        "Exploration & Discovery",
+        "Development & Feasibility",
+        "Producer / Operational",
+        "Royalty & Streaming",
+        "Energy Transition / Critical Minerals"
+      ]
+    },
+    "companyProjectDescription": {
+      "type": "richtext"
+    },
+    "newsletterOptIn": {
+      "type": "boolean"
+    },
+    "showcaseInterest": {
+      "type": "enumeration",
+      "enum": [
+        "One-on-One Executive Meetings",
+        "Corporate Presentation",
+        "Keynote Panel",
+        "Delegate Showcase"
+      ]
+    }
+  }
+}
