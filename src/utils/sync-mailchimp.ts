@@ -20,6 +20,7 @@ import {
   type MailchimpMemberStatus,
   type MailchimpTarget,
 } from './mailchimp';
+import { resolveSourceTag } from './source-website';
 
 export interface MailchimpLifecycleEvent {
   result?: Record<string, unknown>;
@@ -121,6 +122,20 @@ export function buildMailchimpPayload(
     }
   }
 
+  // The website the submission came from, added alongside — never instead of —
+  // the registration category tag above, so an existing contact keeps every
+  // source it has ever registered from. An unknown or missing value adds
+  // nothing rather than guessing a source.
+  const sourceTag = resolveSourceTag(entry.sourceWebsite);
+  if (sourceTag) {
+    if (!tags.includes(sourceTag)) {
+      tags.push(sourceTag);
+    }
+    // Also stored as the SOURCE merge field so the originating website is
+    // readable on the contact, not only inferable from its tags.
+    mergeFields.SOURCE = sourceTag;
+  }
+
   return {
     email,
     firstName,
@@ -201,6 +216,19 @@ export async function deliverMailchimpSync(
   if (!email) {
     strapi.log.warn(`[${formType}] document ${documentId} has no email address for Mailchimp.`);
     return null;
+  }
+
+  strapi.log.info(`[Mailchimp] Processing ${formType} registration`);
+
+  const sourceTag = resolveSourceTag(entry.sourceWebsite);
+  if (sourceTag) {
+    strapi.log.info(`[Mailchimp] Source: ${sourceTag}`);
+    strapi.log.info(`[Mailchimp] Applying tag: ${sourceTag}`);
+  } else {
+    strapi.log.warn(
+      `[${formType}] sourceWebsite is missing or unrecognised - no source tag applied. ` +
+        'The registration is still stored and the contact is still synchronised.'
+    );
   }
 
   try {

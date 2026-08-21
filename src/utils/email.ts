@@ -111,6 +111,9 @@ function buildRows(
   const rows: DisplayRow[] = [];
 
   for (const field of definition.fields) {
+    // Routing-only metadata (e.g. sourceWebsite) is stored but never shown:
+    // the notification email keeps rendering exactly the fields the form asks for.
+    if (field.excludeFromEmail) continue;
     const row = buildRow(field, formData[field.name], media[field.name]);
     if (row) rows.push(row);
   }

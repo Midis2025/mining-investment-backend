@@ -26,6 +26,11 @@ export interface FieldDefinition {
   aliases?: readonly string[];
   /** Maps incoming values onto the canonical enumeration values. */
   valueAliases?: Readonly<Record<string, string>>;
+  /**
+   * Metadata that is stored and used for routing but is not part of what the
+   * form asks for, so it is left out of the notification email.
+   */
+  excludeFromEmail?: boolean;
 }
 
 export interface FormDefinition {
@@ -106,6 +111,20 @@ const NEWSLETTER_FIELD: FieldDefinition = {
   aliases: ['signUpForNews', 'newsletter', 'signupForNews'],
 };
 
+/**
+ * Which of the shared backend's websites the submission came from. Optional and
+ * free-form on purpose: an unrecognised value must never reject a registration.
+ * It only decides which Mailchimp source tag is applied — see ./source-website.
+ */
+const SOURCE_WEBSITE_FIELD: FieldDefinition = {
+  name: 'sourceWebsite',
+  label: 'Source Website',
+  kind: 'string',
+  maxLength: 120,
+  aliases: ['source', 'websiteSource'],
+  excludeFromEmail: true,
+};
+
 export const FORM_DEFINITIONS: Readonly<Record<FormType, FormDefinition>> = {
   investor: {
     uid: 'api::investor-registeration.investor-registeration',
@@ -146,6 +165,7 @@ export const FORM_DEFINITIONS: Readonly<Record<FormType, FormDefinition>> = {
         aliases: ['aboutYou', 'about'],
       },
       NEWSLETTER_FIELD,
+      SOURCE_WEBSITE_FIELD,
     ],
   },
 
@@ -184,6 +204,7 @@ export const FORM_DEFINITIONS: Readonly<Record<FormType, FormDefinition>> = {
         aliases: ['aboutYou', 'about'],
       },
       NEWSLETTER_FIELD,
+      SOURCE_WEBSITE_FIELD,
     ],
   },
 

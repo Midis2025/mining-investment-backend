@@ -104,6 +104,10 @@
     "mailchimpError": {
       "type": "text",
       "maxLength": 1000
+    },
+    "sourceWebsite": {
+      "type": "string",
+      "maxLength": 120
     }
   }
 }

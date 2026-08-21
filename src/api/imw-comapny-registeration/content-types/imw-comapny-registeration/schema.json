@@ -62,6 +62,30 @@
         "Keynote Panel",
         "Delegate Showcase"
       ]
+    },
+    "sourceWebsite": {
+      "type": "string",
+      "maxLength": 120,
+      "default": "International Mining Week"
+    },
+    "mailchimpStatus": {
+      "type": "enumeration",
+      "enum": [
+        "pending",
+        "synced",
+        "failed"
+      ],
+      "default": "pending"
+    },
+    "mailchimpMemberId": {
+      "type": "string"
+    },
+    "mailchimpSyncedAt": {
+      "type": "datetime"
+    },
+    "mailchimpError": {
+      "type": "text",
+      "maxLength": 1000
     }
   }
 }

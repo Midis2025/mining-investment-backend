@@ -643,6 +643,10 @@ export interface ApiCompanyRegisterationCompanyRegisteration
       ['Explorer', 'Developer', 'Producer', 'Royalty', 'Project Generator']
     >;
     publishedAt: Schema.Attribute.DateTime;
+    sourceWebsite: Schema.Attribute.String &
+      Schema.Attribute.SetMinMaxLength<{
+        maxLength: 120;
+      }>;
     tellUsAboutYourself: Schema.Attribute.Text &
       Schema.Attribute.SetMinMaxLength<{
         maxLength: 5000;
@@ -714,6 +718,16 @@ export interface ApiImwComapnyRegisterationImwComapnyRegisteration
       'api::imw-comapny-registeration.imw-comapny-registeration'
     > &
       Schema.Attribute.Private;
+    mailchimpError: Schema.Attribute.Text &
+      Schema.Attribute.SetMinMaxLength<{
+        maxLength: 1000;
+      }>;
+    mailchimpMemberId: Schema.Attribute.String;
+    mailchimpStatus: Schema.Attribute.Enumeration<
+      ['pending', 'synced', 'failed']
+    > &
+      Schema.Attribute.DefaultTo<'pending'>;
+    mailchimpSyncedAt: Schema.Attribute.DateTime;
     newsletterOptIn: Schema.Attribute.Boolean;
     phone: Schema.Attribute.String;
     primaryAssetStageFocus: Schema.Attribute.Enumeration<
@@ -734,6 +748,11 @@ export interface ApiImwComapnyRegisterationImwComapnyRegisteration
         'Delegate Showcase',
       ]
     >;
+    sourceWebsite: Schema.Attribute.String &
+      Schema.Attribute.SetMinMaxLength<{
+        maxLength: 120;
+      }> &
+      Schema.Attribute.DefaultTo<'International Mining Week'>;
     tickerSymbolExchange: Schema.Attribute.String;
     updatedAt: Schema.Attribute.DateTime;
     updatedBy: Schema.Attribute.Relation<'oneToOne', 'admin::user'> &
@@ -791,9 +810,24 @@ export interface ApiImwInvestorRegisterationImwInvestorRegisteration
       'api::imw-investor-registeration.imw-investor-registeration'
     > &
       Schema.Attribute.Private;
+    mailchimpError: Schema.Attribute.Text &
+      Schema.Attribute.SetMinMaxLength<{
+        maxLength: 1000;
+      }>;
+    mailchimpMemberId: Schema.Attribute.String;
+    mailchimpStatus: Schema.Attribute.Enumeration<
+      ['pending', 'synced', 'failed']
+    > &
+      Schema.Attribute.DefaultTo<'pending'>;
+    mailchimpSyncedAt: Schema.Attribute.DateTime;
     newsletterOptIn: Schema.Attribute.Boolean;
     phone: Schema.Attribute.String;
     publishedAt: Schema.Attribute.DateTime;
+    sourceWebsite: Schema.Attribute.String &
+      Schema.Attribute.SetMinMaxLength<{
+        maxLength: 120;
+      }> &
+      Schema.Attribute.DefaultTo<'International Mining Week'>;
     updatedAt: Schema.Attribute.DateTime;
     updatedBy: Schema.Attribute.Relation<'oneToOne', 'admin::user'> &
       Schema.Attribute.Private;
@@ -898,6 +932,10 @@ export interface ApiInvestorRegisterationInvestorRegisteration
         maxLength: 50;
       }>;
     publishedAt: Schema.Attribute.DateTime;
+    sourceWebsite: Schema.Attribute.String &
+      Schema.Attribute.SetMinMaxLength<{
+        maxLength: 120;
+      }>;
     tellUsAboutYourself: Schema.Attribute.Text &
       Schema.Attribute.SetMinMaxLength<{
         maxLength: 5000;
@@ -998,6 +1036,16 @@ export interface ApiNobleCompanyRegistrationNobleCompanyRegistration
       'api::noble-company-registration.noble-company-registration'
     > &
       Schema.Attribute.Private;
+    mailchimpError: Schema.Attribute.Text &
+      Schema.Attribute.SetMinMaxLength<{
+        maxLength: 1000;
+      }>;
+    mailchimpMemberId: Schema.Attribute.String;
+    mailchimpStatus: Schema.Attribute.Enumeration<
+      ['pending', 'synced', 'failed']
+    > &
+      Schema.Attribute.DefaultTo<'pending'>;
+    mailchimpSyncedAt: Schema.Attribute.DateTime;
     marketCapRange: Schema.Attribute.Enumeration<
       [
         'Under $50M',
@@ -1020,6 +1068,11 @@ export interface ApiNobleCompanyRegistrationNobleCompanyRegistration
       ]
     >;
     publishedAt: Schema.Attribute.DateTime;
+    sourceWebsite: Schema.Attribute.String &
+      Schema.Attribute.SetMinMaxLength<{
+        maxLength: 120;
+      }> &
+      Schema.Attribute.DefaultTo<'Noble Mining Investment Conference'>;
     tickerSymbolExchange: Schema.Attribute.String;
     updatedAt: Schema.Attribute.DateTime;
     updatedBy: Schema.Attribute.Relation<'oneToOne', 'admin::user'> &
@@ -1077,9 +1130,24 @@ export interface ApiNobleInvestorRegistrationNobleInvestorRegistration
       'api::noble-investor-registration.noble-investor-registration'
     > &
       Schema.Attribute.Private;
+    mailchimpError: Schema.Attribute.Text &
+      Schema.Attribute.SetMinMaxLength<{
+        maxLength: 1000;
+      }>;
+    mailchimpMemberId: Schema.Attribute.String;
+    mailchimpStatus: Schema.Attribute.Enumeration<
+      ['pending', 'synced', 'failed']
+    > &
+      Schema.Attribute.DefaultTo<'pending'>;
+    mailchimpSyncedAt: Schema.Attribute.DateTime;
     newsletterOptIn: Schema.Attribute.Boolean;
     phone: Schema.Attribute.String;
     publishedAt: Schema.Attribute.DateTime;
+    sourceWebsite: Schema.Attribute.String &
+      Schema.Attribute.SetMinMaxLength<{
+        maxLength: 120;
+      }> &
+      Schema.Attribute.DefaultTo<'Noble Mining Investment Conference'>;
     updatedAt: Schema.Attribute.DateTime;
     updatedBy: Schema.Attribute.Relation<'oneToOne', 'admin::user'> &
       Schema.Attribute.Private;
